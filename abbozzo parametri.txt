@@ -1,0 +1,52 @@
+CARATTERISTICHE DELLA TRUPPA:
+
+a) QUANTI SOLDI USI=   volume   =  RESPONSABILITA'......................... pt. autorità(poca autorità non fa niente e troppa da alla testa)
+
+b) QUANTI SOLDI VINCI/PERDI AD OGNI PASSO = "a quanti soldi corrisponde un movimento dello 0.10%" = PESO.....................pt. energia(poca energia non fa niente e troppa non è gestibile)
+
+c) TAKE PROFIT (%)=ATTACCO.........................pt. arroganza(poca arroganza è debole e troppa dà alla testa)
+d) STOPLOSS (%) =IMPULSIVITA'.........................pt. calma(poca calma è stressante e troppa è flemma)
+
+e) RAPPORTO TRA MGS.IDX E T.P.= VELOCITA'......................... pt. velocità(troppa velocità è rischiosa poca velocità è negativa)
+f) RAPPORTO TRA MGS.IDX E S.L.=  TOLLERANZA......................... pt. tolleranza(troppa tolleranza è negativa e poca non è costruttiva)
+
+g)RAPPORTO TRA STOP LOSS E TAKE PROFIT=CONTROLLO...............pt. ordine(questo punteggio è più particolare)
+
+
+
+ogni qualità ha la propria controparte, interna oppure esterna:
+
+TANTA RESPONSABILITA'= positivo e negativo = troppa è troppa e poca e poca, ma non per forza una media responsabilità è meglio
+TANTO PESO= positivo e negativo = troppo è troppo e poco è poco, ma non per forza un peso medio è meglio
+
+TANTO ATTACCO= POCA VELOCITA'= positivo e negativo
+TANTA IMPULSIVITA' = POCA TOLLERANZA = positivo e negativo
+
+inoltre ogni qualità dovrà avere un suo punteggio relativo e un relativo giudizio
+
+ad esempio:
+avere ATTACCO alto è buono, ma non sempre è fattibile (...raggiungere il t.p)
+
+ATTACCO: +10 implica AMBIZIONE +10
+sapendo che l'ambizione è buona cosa... fino a un certo punto dove diventa ILLUSIONE
+
+
+---------------------------------------------------------------------------------------------------------
+CARATTERISTICHE DEL LUOGO:
+
+QUANTO E' VOLATILE 
+QUAL E' L' MGS.IDX
+QUAND E' IL PERIODO DI MASSIMA ATTIVITA'
+QUAL E' LA LEVA
+CHE TIPO DI MEMORIA HA 
+QUANTO SPREAD HA
+
+------------------------------------------------------------------------------
+CARATTERISTICHE DELLA SITUAZIONE
+
+CHE TREND E' IN ATTO=   FIDUCIA
+CHE ORA E'=   ECCITAZIONE
+CHE GIORNO E'=   SCADENZA
+QUANTO E' CONVENIENTE IL PREZZO=   SPERANZA
+COME SI MUOVONO I VOLUMI=   ENERGIA
+
