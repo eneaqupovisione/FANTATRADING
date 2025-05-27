@@ -1,0 +1,1887 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Enhanced Trading Strategies Analyzer</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.6.1/d3.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1600px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #2196F3, #21CBF3);
+            color: white;
+            padding: 40px;
+            text-align: center;
+        }
+        
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+        }
+        
+        .controls {
+            padding: 30px;
+            background: #f8f9fa;
+            border-bottom: 1px solid #e9ecef;
+        }
+        
+        .control-group {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        
+        .view-buttons {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+        
+        .btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 25px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+        }
+        
+        .btn-secondary {
+            background: #e9ecef;
+            color: #495057;
+        }
+        
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0,0,0,0.15);
+        }
+        
+        .select {
+            padding: 10px 15px;
+            border: 2px solid #e9ecef;
+            border-radius: 10px;
+            background: white;
+            font-size: 14px;
+        }
+        
+        .content {
+            padding: 40px;
+        }
+        
+        .chart-container {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+        }
+        
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-top: 30px;
+        }
+        
+        .stat-card {
+            padding: 25px;
+            border-radius: 15px;
+            color: white;
+            text-align: center;
+            background: linear-gradient(135deg, var(--gradient-start), var(--gradient-end));
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+        
+        .stat-card h3 {
+            font-size: 1.2em;
+            margin-bottom: 10px;
+            opacity: 0.9;
+        }
+        
+        .stat-card .number {
+            font-size: 2.5em;
+            font-weight: bold;
+        }
+        
+        .family-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+        
+        .family-card {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            border-left: 5px solid var(--color);
+            transition: transform 0.3s ease;
+        }
+        
+        .family-card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .family-name {
+            font-size: 1.4em;
+            font-weight: bold;
+            margin-bottom: 15px;
+            color: var(--color);
+        }
+        
+        .pedine-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-bottom: 15px;
+        }
+        
+        .pedina-tag {
+            background: var(--color);
+            color: white;
+            padding: 4px 10px;
+            border-radius: 15px;
+            font-size: 0.85em;
+            font-weight: 500;
+        }
+        
+        .family-stats {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+            margin-top: 15px;
+        }
+        
+        .family-stat {
+            text-align: center;
+            padding: 10px;
+            background: #f8f9fa;
+            border-radius: 8px;
+            font-size: 0.9em;
+        }
+        
+        .family-stat-number {
+            font-size: 1.4em;
+            font-weight: bold;
+            color: var(--color);
+        }
+        
+        .matrix-container {
+            overflow: auto;
+            max-height: 700px;
+            width: fit-content;   /* shrink to grid width, remove empty right gap */
+        }
+        
+        .matrix-grid {
+            display: grid;
+            gap: 1px;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 10px;
+            min-width: 800px;
+        }
+        
+        .matrix-cell {
+            width: 25px;
+            height: 25px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 4px;
+            font-weight: bold;
+            font-size: 0.65em;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            color: white;
+        }
+        
+        .matrix-cell:hover {
+            transform: scale(1.2);
+            z-index: 10;
+            position: relative;
+        }
+        
+        .matrix-labels {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-top: 20px;
+        }
+        
+        .matrix-label {
+            display: flex;
+            align-items: center;      /* vertical centering */
+            justify-content: center;  /* horizontal centering */
+            padding: 4px 8px;
+            background: #e9ecef;
+            border-radius: 12px;
+            font-size: 0.75em;
+            font-weight: 500;
+            white-space: nowrap;
+            text-align: center;
+        }
+
+        /* X‑axis labels (rotated vertically) */
+        .matrix-label-x {
+            writing-mode: vertical-rl;
+            transform: rotate(180deg);
+        }
+
+        /* Y‑axis labels: same height as a data cell */
+        .matrix-label-y {
+            height: 25px;
+            line-height: 25px;
+            padding: 0 6px;
+        }
+
+        /* Fix uniform row height for the grid */
+        .matrix-grid {
+            grid-auto-rows: 25px;
+        }
+        
+        .hidden {
+            display: none;
+        }
+        
+        canvas {
+            max-width: 100%;
+            height: auto;
+        }
+        
+        .legend-container {
+            margin-top: 20px;
+            padding: 15px;
+            background: #f8f9fa;
+            border-radius: 10px;
+        }
+        
+        .legend-title {
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+        
+        .legend-items {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+        
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 5px 10px;
+            background: white;
+            border-radius: 8px;
+            font-size: 0.9em;
+        }
+        
+        .legend-color {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+        }
+        
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 1.8em;
+            }
+            
+            .controls {
+                padding: 20px;
+            }
+            
+            .content {
+                padding: 20px;
+            }
+            
+            .view-buttons {
+                justify-content: center;
+            }
+            
+            .family-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🎯 Enhanced Trading Strategies Analyzer</h1>
+            <p>Analizza 21 pedine attraverso 5 famiglie strategiche con visualizzazioni multidimensionali</p>
+        </div>
+        
+    <div class="controls">
+        <div class="control-group">
+            <label>Filtra per Famiglia:</label>
+            <select id="familyFilter" class="select">
+                <option value="all">Tutte le Famiglie</option>
+                <option value="Breakout & False-break">Breakout & False-break</option>
+                <option value="Trend & Momentum">Trend & Momentum</option>
+                <option value="Reversal & Swing">Reversal & Swing</option>
+                <option value="Volatilità & Range">Volatilità & Range</option>
+                <option value="Sessione & Contesto">Sessione & Contesto</option>
+            </select>
+            
+            <label>Filtra per Sessione:</label>
+            <select id="sessionFilter" class="select">
+                <option value="all">Tutte le Sessioni</option>
+                <option value="Sydney">Sydney</option>
+                <option value="Tokyo">Tokyo</option>
+                <option value="London">London</option>
+                <option value="New York">New York</option>
+            </select>
+            
+            <label>Filtra per Evento:</label>
+            <select id="eventFilter" class="select">
+                <option value="all">Tutti gli Eventi</option>
+            </select>
+        </div>
+        
+        <!-- Mode toggle -->
+        <div class="mode-buttons" style="margin-bottom:15px; display:flex; gap:10px;">
+            <button class="btn btn-primary" id="analysisModeBtn" onclick="switchMode('analysis')">🧮 Analisi</button>
+            <button class="btn btn-secondary" id="detailsModeBtn"  onclick="switchMode('details')">📑 Dettagli</button>
+        </div>
+        <div class="view-buttons">
+            <div id="analysisButtons">
+                <button class="btn btn-primary" onclick="showView('overview')">📊 Overview Famiglie</button>
+                <button class="btn btn-secondary" onclick="showView('scatter')">🎯 Analisi Complessità</button>
+                <button class="btn btn-secondary" onclick="showView('sessions')">🌍 Distribuzione Sessioni</button>
+                <button class="btn btn-secondary" onclick="showView('overlap')">🔀 Analisi Overlap</button>
+                <button class="btn btn-secondary" onclick="showView('eventsPos')">📈 Eventi Positivi</button>
+                <button class="btn btn-secondary" onclick="showView('eventsNeg')">📉 Eventi Negativi</button>
+            </div>
+            <div id="detailsButtons" class="hidden">
+                <button class="btn btn-secondary" onclick="showView('sessionDetails')">📋 Dettagli Sessioni</button>
+                <button class="btn btn-secondary" onclick="showView('pedineDetails')">💠 Dettagli Pedine</button>
+                <button class="btn btn-secondary" onclick="showView('eventiDetails')">🗒 Dettagli Eventi</button>
+            </div>
+        </div>
+    </div>
+        
+        <div class="content">
+            <div id="overviewView" class="view">
+                <div class="chart-container">
+                    <h2>📊 Overview per Famiglie Strategiche</h2>
+                    <div id="familyGrid" class="family-grid"></div>
+                </div>
+            </div>
+            
+            <div id="scatterView" class="view hidden">
+                <div class="chart-container">
+                    <h2>🎯 Distribuzione Pedine per Famiglia e Sessione</h2>
+                    <p style="margin-bottom: 0px; color:#666;">
+                        <strong>Asse Y:</strong> Famiglia di Appartenenza &nbsp;|&nbsp;
+                        <strong>Asse X:</strong> Sessione &nbsp;|&nbsp;
+                        Sezione inferiore (azzurra trasparente) = Pedine con più sessioni
+                    </p>
+                    <canvas id="scatterChart" width="1100" height="900" style="margin-top:-10px;"></canvas>
+                    <div class="legend-container">
+                        <div class="legend-title">Legenda Famiglie:</div>
+                        <div class="legend-items" id="scatterLegend"></div>
+                    </div>
+                </div>
+            </div>
+            
+            <div id="sessionsView" class="view hidden">
+                <div class="chart-container">
+                    <h2>🌍 Distribuzione Pedine per Sessione e Famiglia</h2>
+                    <canvas id="sessionsChart" width="60" height="30"></canvas>
+                </div>
+            </div>
+            
+            <div id="eventsPosView" class="view hidden">
+                <div class="chart-container">
+                    <h2>📈 Matrice Eventi Positivi</h2>
+                    <div id="matrixContainer" class="matrix-container">
+                        <div id="matrixGrid" class="matrix-grid"></div>
+                    </div>
+                    <div id="matrixLabels" class="matrix-labels"></div>
+                </div>
+            </div>
+
+            <div id="eventsNegView" class="view hidden">
+                <div class="chart-container">
+                    <h2>📉 Matrice Eventi Negativi</h2>
+                    <div id="negMatrixContainer" class="matrix-container">
+                        <div id="negMatrixGrid" class="matrix-grid"></div>
+                    </div>
+                    <div id="negMatrixLabels" class="matrix-labels"></div>
+                </div>
+            </div>
+
+            <div id="overlapView" class="view hidden">
+                <div class="chart-container">
+                    <h2>🔀 Analisi Overlap Pedine</h2>
+                    <p style="margin-bottom:10px; color:#666;">
+                        Griglia che mostra il numero di eventi condivisi tra ogni coppia di pedine.
+                    </p>
+                    <div id="overlapMatrixContainer" class="matrix-container">
+                        <div id="overlapMatrixGrid" class="matrix-grid"></div>
+                    </div>
+                    <div id="overlapMatrixLabels" class="matrix-labels"></div>
+                </div>
+            </div>
+            
+            <!-- Dettagli Sessioni -->
+            <div id="sessionDetailsView" class="view hidden">
+                <div class="chart-container">
+                    <h2>📋 Dettagli per Sessione</h2>
+                    <div id="sessionDetailsContainer"></div>
+                </div>
+            </div>
+
+            <!-- Dettagli Pedine -->
+            <div id="pedineDetailsView" class="view hidden">
+                <div class="chart-container">
+                    <h2>💠 Dettagli Pedine</h2>
+                    <div id="pedineDetailsContainer"></div>
+                </div>
+            </div>
+
+            <!-- Dettagli Eventi -->
+            <div id="eventiDetailsView" class="view hidden">
+                <div class="chart-container">
+                    <h2>🗒 Dettagli Eventi</h2>
+                    <div id="eventiDetailsContainer"></div>
+                </div>
+            </div>
+
+            <div class="stats-grid">
+                <div class="stat-card" style="--gradient-start: #667eea; --gradient-end: #764ba2;">
+                    <h3>Pedine Totali</h3>
+                    <div class="number" id="totalPedine">21</div>
+                </div>
+                <div class="stat-card" style="--gradient-start: #11998e; --gradient-end: #38ef7d;">
+                    <h3>Eventi Positivi Unici</h3>
+                    <div class="number" id="totalPositive">22</div>
+                </div>
+                <div class="stat-card" style="--gradient-start: #fc4a1a; --gradient-end: #f7b733;">
+                    <h3>Eventi Negativi Unici</h3>
+                    <div class="number" id="totalNegative">22</div>
+                </div>
+                <div class="stat-card" style="--gradient-start: #8360c3; --gradient-end: #2ebf91;">
+                    <h3>Famiglie Strategiche</h3>
+                    <div class="number" id="totalFamilies">5</div>
+                </div>
+            </div>
+        <!-- Global tooltip for all views -->
+        <div id="tooltip" style="position:absolute; display:none; background:rgba(255,255,255,0.95); color:#000; padding:8px; border-radius:4px; pointer-events:none; font-size:12px; z-index:1000; box-shadow:0 2px 8px rgba(0,0,0,0.2);"></div>
+        </div>
+    </div>
+
+    <script>
+        // Global store for drawn circles
+        const circleData = [];
+        // Tooltip DOM element (created after DOMContentLoaded)
+        const tooltip = document.getElementById ? document.getElementById('tooltip') : null;
+
+        // Tooltip helpers for all matrix views
+        function showTooltip(html, pageX, pageY) {
+            if (!tooltip) return;
+            tooltip.innerHTML = html;
+            tooltip.style.display = 'block';
+            tooltip.style.left = pageX + 10 + 'px';
+            tooltip.style.top  = pageY + 10 + 'px';
+        }
+        function hideTooltip() {
+            if (tooltip) tooltip.style.display = 'none';
+        }
+
+        function getMousePos(canvas, evt) {
+            const rect = canvas.getBoundingClientRect();
+            return {
+                x: evt.clientX - rect.left,
+                y: evt.clientY - rect.top
+            };
+        }
+        // Dati completi delle pedine organizzati per famiglia
+        const pedineData = [
+            // Breakout & False-break
+            { name: "Breakout_Hunter", family: "Breakout & False-break", sessions: ["London", "New York"], positiveEvents: ["E01", "E07", "E15", "E17"], negativeEvents: ["N01", "N05", "N06"], color: "#FF6B6B" },
+            { name: "Inverse_Breakout", family: "Breakout & False-break", sessions: [], positiveEvents: ["E05", "E16", "E22"], negativeEvents: ["N05", "N01", "N16"], color: "#FF6B6B" },
+            { name: "Volatility_Breakout", family: "Breakout & False-break", sessions: ["London"], positiveEvents: ["E07", "E17", "E01"], negativeEvents: ["N07", "N18", "N22"], color: "#FF6B6B" },
+            { name: "Box_Escape", family: "Breakout & False-break", sessions: ["Sydney"], positiveEvents: ["E17", "E07"], negativeEvents: ["N17", "N05"], color: "#FF6B6B" },
+            
+            // Trend & Momentum
+            { name: "Trend_Follower", family: "Trend & Momentum", sessions: [], positiveEvents: ["E02", "E03", "E21", "E15"], negativeEvents: ["N03", "N04", "N14", "N21"], color: "#4ECDC4" },
+            { name: "Continuation_Flash", family: "Trend & Momentum", sessions: ["New York"], positiveEvents: ["E06", "E14", "E15"], negativeEvents: ["N02", "N06", "N07"], color: "#4ECDC4" },
+            { name: "Persistence_Rider", family: "Trend & Momentum", sessions: ["Tokyo", "New York"], positiveEvents: ["E21", "E03"], negativeEvents: ["N21", "N08"], color: "#4ECDC4" },
+            
+            // Reversal & Swing
+            { name: "Reversal_Swing", family: "Reversal & Swing", sessions: ["Tokyo"], positiveEvents: ["E04", "E08", "E09", "E10"], negativeEvents: ["N02", "N04", "N07"], color: "#45B7D1" },
+            { name: "Exhaustion_Rebound", family: "Reversal & Swing", sessions: ["New York"], positiveEvents: ["E16", "E08"], negativeEvents: ["N16", "N07"], color: "#45B7D1" },
+            { name: "VWAP_Reversionist", family: "Reversal & Swing", sessions: ["London"], positiveEvents: ["E18", "E08"], negativeEvents: ["N18", "N03"], color: "#45B7D1" },
+            
+            // Volatilità & Range
+            { name: "Volatility_Fade", family: "Volatilità & Range", sessions: ["Sydney", "Tokyo"], positiveEvents: ["E08", "E16", "E18"], negativeEvents: ["N08", "N06", "N07"], color: "#FFA07A" },
+            { name: "Range_Sniper", family: "Volatilità & Range", sessions: ["Sydney"], positiveEvents: ["E12", "E22"], negativeEvents: ["N01", "N12", "N07"], color: "#FFA07A" },
+            { name: "Vol_Skew_Punter", family: "Volatilità & Range", sessions: ["London"], positiveEvents: ["E20", "E01"], negativeEvents: ["N20", "N02"], color: "#FFA07A" },
+            
+            // Sessione & Contesto
+            { name: "Support_Bounce", family: "Sessione & Contesto", sessions: ["Sydney", "Tokyo"], positiveEvents: ["E09", "E18"], negativeEvents: ["N09", "N04"], color: "#9B59B6" },
+            { name: "Resistance_Drop", family: "Sessione & Contesto", sessions: ["Sydney", "Tokyo"], positiveEvents: ["E10", "E18"], negativeEvents: ["N10", "N04"], color: "#9B59B6" },
+            { name: "Strategic_Value", family: "Sessione & Contesto", sessions: [], positiveEvents: ["E11", "E19"], negativeEvents: ["N11", "N19"], color: "#9B59B6" },
+            { name: "Gap_Filler", family: "Sessione & Contesto", sessions: ["Sydney", "Tokyo"], positiveEvents: ["E13", "E14"], negativeEvents: ["N13", "N07"], color: "#9B59B6" },
+            { name: "Session_Open_Rush", family: "Sessione & Contesto", sessions: ["New York"], positiveEvents: ["E14", "E06"], negativeEvents: ["N14", "N02"], color: "#9B59B6" },
+            { name: "Overlap_Surge", family: "Sessione & Contesto", sessions: ["London"], positiveEvents: ["E15", "E01"], negativeEvents: ["N15", "N14"], color: "#9B59B6" },
+            { name: "Seasonal_Flow", family: "Sessione & Contesto", sessions: [], positiveEvents: ["E19", "E11"], negativeEvents: ["N19", "N14"], color: "#9B59B6" }
+        ];
+
+        /* ------ Sessioni: dettagli statici ------ */
+        const sessionsOverview = {
+            "Sydney": {
+                season: "Inverno",
+                pros: [
+                    "All'inizio della settimana e della giornata è ideale per colmare i gap lasciati da New York.",
+                    "Spike iniziali su AUD e NZD in uscita di dati oceanici, perfetti per scalper veloci.",
+                    "Volatilità contenuta: adatta a gestire posizioni overnight con rischio ridotto.",
+                    "Il vuoto di liquidità facilita stop-hunt e micro-manovre tecniche."
+                ],
+                cons: [
+                    "Book sottili e spread larghi: alto rischio di slippage.",
+                    "Breakout sostenuti sono rari; molte rotture rientrano in poche barre.",
+                    "Se mancano notizie, il flusso si appiattisce e il prezzo può restare fermo a lungo.",
+                    "I livelli tecnici nati in notturna spesso non reggono quando aprono le piazze maggiori."
+                ],
+                assetPro: ["AUD/USD","NZD/USD","AUD/JPY","Altcoin_Crypto"],
+                assetCons: ["Cross_EUR_esotici","Cross_GBP_esotici","Futures_USA_Globex","DAX_futures"],
+                pedinePro: ["Range_Sniper","Gap_Filler","Volatility_Fade","Support_Bounce","Resistance_Drop","Box_Escape"],
+                pedineCons: ["Breakout_Hunter","Volatility_Breakout","Overlap_Surge"]
+            },
+            "Tokyo": {
+                season: "Autunno",
+                pros: [
+                    "Prime ore ricche di dati nipponici e cinesi: movimenti nitidi su coppie JPY e AUD.",
+                    "Unwind dei carry-trade può generare inversioni improvvise se la BOJ sorprende.",
+                    "Volatilità controllata: consente di costruire posizioni senza whipsaw stile New York.",
+                    "L'ultima ora in overlap con Londra offre extra spinta ai breakout già avviati."
+                ],
+                cons: [
+                    "Dopo i primi dati la sessione può 'addormentarsi' per ore.",
+                    "Overlap ridotto con Europa, quindi meno profondità se mancano catalyst.",
+                    "Breakout partiti a Tokyo talvolta si sgonfiano quando apre Londra."
+                ],
+                assetPro: ["USD/JPY","AUD/JPY","NZD/JPY","Nikkei_Futures","Topix"],
+                assetCons: ["Cross_GBP","Commodities_USA (WTI) salvo notizie shock"],
+                pedinePro: ["Reversal_Swing","Persistence_Rider","Volatility_Fade","Gap_Filler","Support_Bounce","Resistance_Drop"],
+                pedineCons: ["Overlap_Surge","Session_Open_Rush"]
+            },
+            "London": {
+                season: "Primavera",
+                pros: [
+                    "Massima liquidità su EUR, GBP, oro e Brent, con spread stretti.",
+                    "Dati macro UE/UK fra le 08:00 e le 10:00 UTC: ottimi per breakout direzionali.",
+                    "Overlap con New York (13-16 UTC) produce i range più ampi del giorno.",
+                    "Fixing FX delle 15 UTC e London close generano flussi potenti."
+                ],
+                cons: [
+                    "La fascia pranzo (12-13 UTC) è spesso priva di movimento.",
+                    "Il giovedì e venerdì pomeriggio prevalgono prese di profitto pre-weekend.",
+                    "GBP soggetta a falsi breakout con ritracci lampo dopo le news."
+                ],
+                assetPro: ["XAU/USD","GBP/USD","EUR/GBP","EUR/USD","Brent_Crude","DAX_Futures","FTSE_Futures"],
+                assetCons: ["Cross_AUD_NZD","Equity_USA_pre_open"],
+                pedinePro: ["Volatility_Breakout","Breakout_Hunter","VWAP_Reversionist","Overlap_Surge","Vol_Skew_Punter"],
+                pedineCons: ["Range_Sniper","Gap_Filler"]
+            },
+            "New York": {
+                season: "Estate",
+                pros: [
+                    "Volumi record su FX majors, Treasury e futures azionari USA.",
+                    "I dati USA (CPI, NFP, Fed) innescano movimenti direzionali 'da manuale'.",
+                    "La sessione è ideale per strategie di continuazione del trend.",
+                    "Nell'ultima ora i flussi di chiusura offrono opportunità di Exhaustion_Rebound."
+                ],
+                cons: [
+                    "Whipsaw violenti nei 10 minuti post-news: HFT e retail sparano insieme.",
+                    "Post-lunch fade (18-20 UTC) può annullare i breakout mattutini.",
+                    "Festività USA o summer-doldrums riducono drasticamente la liquidità."
+                ],
+                assetPro: ["EUR/USD","USD/JPY","ES_Futures","Nasdaq_Futures","WTI_Crude","BTC_ETH"],
+                assetCons: ["Cross_scandinavi","Cross_esotici_post_EU","Gold_spot_post_London"],
+                pedinePro: ["Breakout_Hunter","Continuation_Flash","Session_Open_Rush","Persistence_Rider","Exhaustion_Rebound"],
+                pedineCons: ["Range_Sniper","Volatility_Fade"]
+            }
+        };
+
+        // Colori delle famiglie
+        const familyColors = {
+            "Breakout & False-break": "#FF0000",    // intense red
+            "Trend & Momentum":      "#008000",    // intense green
+            "Reversal & Swing":      "#FFA500",    // orange-yellow
+            "Volatilità & Range":    "#800080",    // purple
+            "Sessione & Contesto":   "#0000FF"     // blue
+        };
+
+        // Colori termici per le sessioni
+        const sessionColors = {
+            "Sydney":   "#7fd3ff",  // azzurro ghiaccio
+            "Tokyo":    "#9ee8c8",  // verdino acqua
+            "London":   "#ffad5c",  // arancione caldo
+            "New York": "#ff6b6b"   // rosso intenso
+        };
+
+        let currentView = 'overview';
+        let filteredData = [...pedineData];
+        let currentMode = 'analysis';   // 'analysis' or 'details'
+
+        function switchMode(mode){
+            currentMode = mode;
+            // toggle button appearance
+            document.getElementById('analysisModeBtn').className = mode==='analysis' ? 'btn btn-primary' : 'btn btn-secondary';
+            document.getElementById('detailsModeBtn').className  = mode==='details'  ? 'btn btn-primary' : 'btn btn-secondary';
+            // toggle button groups
+            document.getElementById('analysisButtons').classList.toggle('hidden', mode!=='analysis');
+            document.getElementById('detailsButtons' ).classList.toggle('hidden', mode!=='details');
+            // default view per mode
+            if(mode==='analysis'){
+                showView('overview');
+            }else{
+                showView('sessionDetails');
+            }
+        }
+
+        // Inizializzazione
+        document.addEventListener('DOMContentLoaded', function() {
+            populateEventFilter();
+            renderOverview();
+            setupEventListeners();
+            updateStats();
+        });
+
+        function populateEventFilter() {
+            const eventFilter = document.getElementById('eventFilter');
+            const allEvents = new Set();
+            
+            pedineData.forEach(pedina => {
+                [...pedina.positiveEvents, ...pedina.negativeEvents].forEach(event => {
+                    allEvents.add(event);
+                });
+            });
+            
+            Array.from(allEvents).sort().forEach(event => {
+                const option = document.createElement('option');
+                option.value = event;
+                option.textContent = event;
+                eventFilter.appendChild(option);
+            });
+        }
+
+        function setupEventListeners() {
+            document.getElementById('familyFilter').addEventListener('change', filterData);
+            document.getElementById('sessionFilter').addEventListener('change', filterData);
+            document.getElementById('eventFilter').addEventListener('change', filterData);
+        }
+
+        function filterData() {
+            const familyFilter = document.getElementById('familyFilter').value;
+            const sessionFilter = document.getElementById('sessionFilter').value;
+            const eventFilter = document.getElementById('eventFilter').value;
+            
+            filteredData = pedineData.filter(pedina => {
+                if (familyFilter !== 'all' && pedina.family !== familyFilter) return false;
+                if (sessionFilter !== 'all' && !pedina.sessions.includes(sessionFilter)) return false;
+                if (eventFilter !== 'all') {
+                    const hasEvent = [...pedina.positiveEvents, ...pedina.negativeEvents].includes(eventFilter);
+                    if (!hasEvent) return false;
+                }
+                return true;
+            });
+            
+            // Aggiorna la vista corrente
+            switch(currentView) {
+                case 'overview': renderOverview(); break;
+                case 'scatter': renderScatterPlot(); break;
+                case 'sessions': renderSessionsChart(); break;
+                case 'eventsPos': renderEventsPos(); break;
+                case 'eventsNeg': renderEventsNeg(); break;
+                case 'overlap': renderOverlap(); break;
+                case 'sessionDetails': renderSessionDetails(); break;
+                case 'pedineDetails': renderPedineDetails(); break;
+                case 'eventiDetails': renderEventiDetails(); break;
+            }
+            
+            updateStats();
+        }
+
+        function showView(viewName) {
+            document.querySelectorAll('.view').forEach(view => view.classList.add('hidden'));
+            document.querySelectorAll('.view-buttons .btn').forEach(btn => btn.className = 'btn btn-secondary');
+            event.target.className = 'btn btn-primary';
+            document.getElementById(viewName + 'View').classList.remove('hidden');
+            currentView = viewName;
+            
+            switch(viewName) {
+                case 'overview': renderOverview(); break;
+                case 'scatter': renderScatterPlot(); break;
+                case 'sessions': renderSessionsChart(); break;
+                case 'eventsPos': renderEventsPos(); break;
+                case 'eventsNeg': renderEventsNeg(); break;
+                case 'overlap': renderOverlap(); break;
+                case 'sessionDetails': renderSessionDetails(); break;
+                case 'pedineDetails': renderPedineDetails(); break;
+                case 'eventiDetails': renderEventiDetails(); break;
+            }
+        }
+        // --- Nuove funzioni Dettaglio ---
+        function renderSessionDetails() {
+            const box = document.getElementById('sessionDetailsContainer');
+            box.innerHTML = '';
+
+            const nameToColor = {};
+            pedineData.forEach(p => { nameToColor[p.name] = familyColors[p.family]; });
+
+            Object.entries(sessionsOverview).forEach(([session, data]) => {
+                const card = document.createElement('div');
+                card.style.border = '1px solid #dee2e6';
+                card.style.borderRadius = '8px';
+                card.style.padding = '12px 16px';
+                card.style.marginBottom = '16px';
+                
+                // Applica il colore della sessione
+                const base = sessionColors[session] || '#f8f9fa';
+                card.style.background = base + '22';      // 22 ≈ 13% opacità
+                card.style.borderLeft = '6px solid ' + base;
+
+                // Build repeated HTML fragments safely
+                const proList  = data.pros ? data.pros.map(p => '<li>' + p + '</li>').join('') : '';
+                const consList = data.cons ? data.cons.map(p => '<li>' + p + '</li>').join('') : '';
+                const pedPro   = data.pedinePro ? data.pedinePro.map(n => '<span style="color:'+(nameToColor[n]||'#000')+'">'+n+'</span>').join(', ') : '';
+                const pedCons  = data.pedineCons ? data.pedineCons.map(n => '<span style="color:'+(nameToColor[n]||'#000')+'">'+n+'</span>').join(', ') : '';
+                
+                const html = [
+                    '<h3 style="color:' + base + '">' + session + (data.season ? ' — <em>' + data.season + '</em>' : '') + '</h3>'
+                ];
+                
+                if (data.pros) html.push('<strong>Pro:</strong><ul>' + proList + '</ul>');
+                if (data.cons) html.push('<strong>Contro:</strong><ul>' + consList + '</ul>');
+                if (data.assetPro) html.push('<strong>Asset consigliati:</strong> ' + data.assetPro.join(', '));
+                if (data.assetCons) html.push('<strong>Asset sconsigliati:</strong> ' + data.assetCons.join(', '));
+                if (data.pedinePro || data.pedineCons) html.push('');  // empty line
+                if (data.pedinePro) html.push('<strong>Pedine consigliate:</strong> ' + pedPro);
+                if (data.pedineCons) html.push('<strong>Pedine da evitare:</strong> ' + pedCons);
+
+                card.innerHTML = html.join('<br>');
+                box.appendChild(card);
+            });
+        }
+
+        function renderPedineDetails() {
+            const box = document.getElementById('pedineDetailsContainer');
+            box.innerHTML = '';
+
+            // Dati estesi delle pedine
+            const pedineDetailsData = {
+                "Breakout_Hunter": {
+                    description: "Entra quando il prezzo rompe un livello chiave con conferme di volume e volatilità.",
+                    sessioni_consigliate: ["London", "New York"],
+                    sessioni_da_evitate: ["Sydney", "Tokyo"]
+                },
+                "Trend_Follower": {
+                    description: "Aggiunge posizioni nei pull-back durante un trend solido già in atto.",
+                    sessioni_consigliate: ["New York", "London"],
+                    sessioni_da_evitate: ["Sydney", "Tokyo"]
+                },
+                "Reversal_Swing": {
+                    description: "Cerca inversioni strutturali combinando divergenze momentum e reazioni su livelli chiave.",
+                    sessioni_consigliate: ["Tokyo", "Sydney"],
+                    sessioni_da_evitate: ["New York", "London"]
+                },
+                "Inverse_Breakout": {
+                    description: "Opera sui falsi breakout: rientra nella zona dopo la rottura non confermata.",
+                    sessioni_consigliate: ["Tokyo", "Sydney"],
+                    sessioni_da_evitate: ["London", "New York"]
+                },
+                "Continuation_Flash": {
+                    description: "Coglie rapidi movimenti impulsivi di continuazione all'interno di trend forti.",
+                    sessioni_consigliate: ["New York", "London"],
+                    sessioni_da_evitate: ["Sydney", "Tokyo"]
+                },
+                "Volatility_Breakout": {
+                    description: "Si attiva quando una compressione di volatilità esplode, puntando a movimenti ampi e rapidi.",
+                    sessioni_consigliate: ["London", "New York"],
+                    sessioni_da_evitate: ["Sydney", "Tokyo"]
+                },
+                "Volatility_Fade": {
+                    description: "Contrasta spike di volatilità eccessivi quando emergono segnali di esaurimento.",
+                    sessioni_consigliate: ["Sydney", "Tokyo", "London"],
+                    sessioni_da_evitate: ["New York"]
+                },
+                "Support_Bounce": {
+                    description: "Acquista su supporti affidabili dopo un rimbalzo confermato da volume.",
+                    sessioni_consigliate: ["Sydney", "Tokyo"],
+                    sessioni_da_evitate: ["London", "New York"]
+                },
+                "Resistance_Drop": {
+                    description: "Vende su resistenze affidabili dopo una chiara respinta con volume confermante.",
+                    sessioni_consigliate: ["Sydney", "Tokyo"],
+                    sessioni_da_evitate: ["London", "New York"]
+                },
+                "Strategic_Value": {
+                    description: "Entra solo quando il rapporto rischio/rendimento è eccezionalmente favorevole.",
+                    sessioni_consigliate: ["Sydney", "Tokyo"],
+                    sessioni_da_evitate: ["New York", "London"]
+                },
+                "Range_Sniper": {
+                    description: "Scalpa all'interno di range ben definiti finché volatilità e session force restano basse.",
+                    sessioni_consigliate: ["Sydney", "Tokyo"],
+                    sessioni_da_evitate: ["London", "New York"]
+                },
+                "Gap_Filler": {
+                    description: "Sfrutta i gap di apertura puntando al loro riassorbimento parziale o completo.",
+                    sessioni_consigliate: ["Sydney", "Tokyo"],
+                    sessioni_da_evitate: ["London", "New York"]
+                },
+                "Session_Open_Rush": {
+                    description: "Opera nei primi minuti di una nuova sessione approfittando del picco iniziale di flussi.",
+                    sessioni_consigliate: ["New York", "London"],
+                    sessioni_da_evitate: ["Tokyo", "Sydney"]
+                },
+                "Overlap_Surge": {
+                    description: "Prende posizione durante l'overlap London-NY, quando liquidità e range sono al massimo.",
+                    sessioni_consigliate: ["London", "New York"],
+                    sessioni_da_evitate: ["Sydney", "Tokyo"]
+                },
+                "Exhaustion_Rebound": {
+                    description: "Interviene dopo un grande spike ritracciato rapidamente, puntando al rimbalzo post-esaurimento.",
+                    sessioni_consigliate: ["New York", "London"],
+                    sessioni_da_evitate: ["Sydney", "Tokyo"]
+                },
+                "Box_Escape": {
+                    description: "Entra quando il prezzo evade da un volume-box compatto, anticipando un'espansione di range.",
+                    sessioni_consigliate: ["Sydney", "Tokyo"],
+                    sessioni_da_evitate: ["New York", "London"]
+                },
+                "VWAP_Reversionist": {
+                    description: "Cerca movimenti di ritorno verso il VWAP dopo estensioni estreme.",
+                    sessioni_consigliate: ["London", "Tokyo"],
+                    sessioni_da_evitate: ["Sydney", "New York"]
+                },
+                "Seasonal_Flow": {
+                    description: "Sfrutta bias ricorrenti di giorno-della-settimana o fine-mese.",
+                    sessioni_consigliate: ["London", "Tokyo"],
+                    sessioni_da_evitate: ["New York", "Sydney"]
+                },
+                "Vol_Skew_Punter": {
+                    description: "Segue la direzione indicata dallo skew di volatilità.",
+                    sessioni_consigliate: ["London", "New York"],
+                    sessioni_da_evitate: ["Sydney", "Tokyo"]
+                },
+                "Persistence_Rider": {
+                    description: "Resta in posizione finché il Trend Persistence Rate è robusto.",
+                    sessioni_consigliate: ["Tokyo", "New York", "London"],
+                    sessioni_da_evitate: ["Sydney"]
+                }
+            };
+
+            filteredData.forEach(p => {
+                const details = pedineDetailsData[p.name];
+                const card = document.createElement('div');
+                card.className = 'pedina-card';
+                card.style.border = '1px solid #dee2e6';
+                card.style.borderRadius = '8px';
+                card.style.padding = '12px 16px';
+                card.style.marginBottom = '16px';
+                card.style.background = '#ffffff';
+                card.style.boxShadow = '0 2px 4px rgba(0,0,0,0.05)';
+                card.style.borderLeft = `6px solid ${familyColors[p.family]}`;
+
+                const consigliateList = details.sessioni_consigliate.length ? details.sessioni_consigliate.join(', ') : 'Nessuna';
+                const evitareList = details.sessioni_da_evitate.length ? details.sessioni_da_evitate.join(', ') : 'Nessuna';
+
+                card.innerHTML = `
+                    <div style="color:${familyColors[p.family]}; font-size:1.2em; font-weight:bold; margin-bottom:8px">
+                        ${p.name.replace('_', ' ')}
+                    </div>
+                    <div style="color:#666; font-style:italic; margin-bottom:12px">
+                        ${details.description}
+                    </div>
+                    <div style="margin-bottom:4px">
+                        <strong>Famiglia:</strong> ${p.family}
+                    </div>
+                    <div style="margin-bottom:4px">
+                        <strong>Eventi positivi:</strong> ${p.positiveEvents.join(', ')}
+                    </div>
+                    <div style="margin-bottom:4px">
+                        <strong>Eventi negativi:</strong> ${p.negativeEvents.join(', ')}
+                    </div>
+
+                    <div style="margin-bottom:4px">
+                        <strong>Sessioni consigliate:</strong> ${consigliateList}
+                    </div>
+                    <div>
+                        <strong>Sessioni da evitare:</strong> ${evitareList}
+                    </div>
+                `;
+
+                box.appendChild(card);
+            });
+        }
+
+        // Database degli eventi con dettagli e analisi
+        const eventsDatabase = {
+            positive: {
+                E01: {
+                    description: "Breakout di livello chiave con volume alto e volatilità in espansione",
+                    analysis: [
+                        "Sottoblocco Swing + per individuare il pivot e tracciare il livello chiave di rottura",
+                        "Sottoblocco Price_vs_Trend_Level + per misurare quanto la chiusura supera il livello pivot",
+                        "Sottoblocco Reaction (breakout) + per confermare il breakout tramite body_vs_ATR e close_beyond_pct",
+                        "Sottoblocco RelVol_Now + per verificare che il volume corrente sia significativamente sopra la media",
+                        "Sottoblocco Spike + per catturare l'aumento improvviso di range tipico di volatilità in espansione"
+                    ]
+                },
+                E02: {
+                    description: "Pull-back ordinato dentro un trend forte",
+                    analysis: [
+                        "Sottoblocco Swing + per definire il pivot e la struttura di swing in cui rientrare",
+                        "Sottoblocco Direction + per accertare che esista un trend definito (EMA fast vs slow)",
+                        "Sottoblocco Price_vs_Trend_Level + per confermare che il prezzo si sia avvicinato al livello di swing",
+                        "Sottoblocco Strength + per misurare la robustezza del trend tramite ADX",
+                        "Sottoblocco Reaction (rejection) + per cogliere la reazione di prezzo al livello di pull-back"
+                    ]
+                },
+                E03: {
+                    description: "Momentum direzionale sostenuto in trend in progressione",
+                    analysis: [
+                        "Sottoblocco Direction + per identificare la direzione dominante del trend",
+                        "Sottoblocco Strength + per quantificare la forza del trend con l'ADX",
+                        "Sottoblocco Persistence_TPR + per valutare la persistenza del trend nel tempo",
+                        "Sottoblocco RSI_Trend + per confermare il bias direzionale tramite RSI filtrato"
+                    ]
+                },
+                E04: {
+                    description: "Inversione strutturale con divergenza e livello chiave",
+                    analysis: [
+                        "Sottoblocco Swing + per individuare il pivot e il livello su cui cercare inversione",
+                        "Sottoblocco Divergence_Multi + per rilevare divergenze regolari o nascoste tra prezzo e oscillatori",
+                        "Sottoblocco Reaction (rejection) + per catturare pattern di inversione come pin-bar o engulfing"
+                    ]
+                },
+                E05: {
+                    description: "Falso breakout con rapido rientro nel range",
+                    analysis: [
+                        "Sottoblocco Swing + per definire il range originario e il punto di breakout",
+                        "Sottoblocco Reaction (breakout + rejection) + per identificare sia la rottura che il rifiuto immediato",
+                        "Sottoblocco Exhaustion + per verificare il retracement rapido dopo lo spike iniziale"
+                    ]
+                },
+                E06: {
+                    description: "Spike impulsivo di continuazione",
+                    analysis: [
+                        "Sottoblocco Spike + per misurare lo spike di range rispetto all'ATR",
+                        "Sottoblocco Burst_Shift + per unire anomalia di prezzo e volume in un punteggio unico",
+                        "Sottoblocco ClimaxSpike + per confermare un picco di volume e range eccezionali"
+                    ]
+                },
+                E07: {
+                    description: "Compressione di volatilità che esplode",
+                    analysis: [
+                        "Sottoblocco Compression + per rilevare bande strette e condizioni di \"squeeze\"",
+                        "Sottoblocco Spike + per riconoscere l'espansione improvvisa del range",
+                        "Sottoblocco Sustained_Breakout + per confermare se l'esplosione di volatilità perdura"
+                    ]
+                },
+                E08: {
+                    description: "Climax o esaurimento di volatilità pronto a reversare",
+                    analysis: [
+                        "Sottoblocco ClimaxSpike + per individuare un picco estremo di volume e range",
+                        "Sottoblocco Exhaustion + per captare il rimbalzo o retrace successivo allo spike"
+                    ]
+                },
+                E09: {
+                    description: "Rimbalzo su supporto solido confermato da volume",
+                    analysis: [
+                        "Sottoblocco Swing + per determinare il pivot di supporto",
+                        "Sottoblocco Reaction (rejection) + per cogliere la candela di rifiuto al supporto",
+                        "Sottoblocco Price_vs_Trend_Level + per verificare che il prezzo si trovi vicino al livello di supporto"
+                    ]
+                },
+                E10: {
+                    description: "Drop da resistenza forte con rejection voluminosa",
+                    analysis: [
+                        "Sottoblocco Swing + per definire il pivot di resistenza",
+                        "Sottoblocco Reaction (rejection) + per rilevare la candela di rifiuto su quella resistenza",
+                        "Sottoblocco Price_vs_Trend_Level + per misurare la vicinanza del prezzo al livello di resistenza"
+                    ]
+                },
+                E11: {
+                    description: "Rapporto rischio/rendimento eccezionalmente favorevole",
+                    analysis: [
+                        "Sottoblocco Reaction + per analizzare ampiezza e ombre della candela rispetto al segnale",
+                        "Sottoblocco RelVol_Now + per pesare il setup in base a un picco di volume",
+                        "Sottoblocco Price_vs_Trend_Level + per quantificare l'estensione del movimento rispetto al livello"
+                    ]
+                },
+                E12: {
+                    description: "Range stabile con bassa volatilità",
+                    analysis: [
+                        "Sottoblocco Compression + per confermare bande strette e condizione di quiete",
+                        "Sottoblocco Volume_Churn + per rilevare bassa liquidità unita a range compresso"
+                    ]
+                },
+                E13: {
+                    description: "Gap aperto con alta probabilità di riempimento",
+                    analysis: [
+                        "Nessun sottoblocco core dedicato + richiede logica custom di gap detection su open vs prev_close"
+                    ]
+                },
+                E14: {
+                    description: "Rush di apertura sessione con volumi concentrati",
+                    analysis: [
+                        "Sottoblocco Session_Dynamics + per applicare boost di peso nella finestra di apertura",
+                        "Sottoblocco Reaction (breakout) + per catturare le prime barre di forte movimento"
+                    ]
+                },
+                E15: {
+                    description: "Overlap London–NY con massima liquidità e range",
+                    analysis: [
+                        "Sottoblocco Session_Dynamics + per riconoscere il tag di overlap tra le due sessioni",
+                        "Sottoblocco Range_D + per misurare l'allargamento del range durante l'overlap"
+                    ]
+                },
+                E16: {
+                    description: "Exhaustion spike seguito da rapido rimbalzo",
+                    analysis: [
+                        "Sottoblocco Spike o ClimaxSpike + per individuare lo spike iniziale di range/volume",
+                        "Sottoblocco Exhaustion + per rilevare il rimbalzo nel window successivo"
+                    ]
+                },
+                E17: {
+                    description: "Uscita da box o consolidazione prolungata",
+                    analysis: [
+                        "Sottoblocco Volume_Box + per definire cluster di barre con volume e range compressi",
+                        "Sottoblocco Sustained_Breakout + per confermare la rottura della box"
+                    ]
+                },
+                E18: {
+                    description: "Mean-reversion su VWAP dopo estensione estrema",
+                    analysis: [
+                        "Sottoblocco VWAP_Distance + per misurare la deviazione dal VWAP",
+                        "Sottoblocco Reaction (rejection) + per cogliere la candela di ritorno verso la media"
+                    ]
+                },
+                E19: {
+                    description: "Bias stagionale o temporale ricorrente",
+                    analysis: [
+                        "Nessun sottoblocco core dedicato + serve logica calendar-based per gestire pattern stagionali"
+                    ]
+                },
+                E20: {
+                    description: "Volatility skew direzionale",
+                    analysis: [
+                        "Sottoblocco Volatility_Skew + per calcolare il rapporto upper_dev/lower_dev delle bande"
+                    ]
+                },
+                E21: {
+                    description: "Trend persistente supportato da metriche di persistenza",
+                    analysis: [
+                        "Sottoblocco Direction + per assicurare una direzione netta del trend",
+                        "Sottoblocco Strength + per misurare la forza con l'ADX",
+                        "Sottoblocco Persistence_TPR + per valutare la tenuta del trend nel tempo"
+                    ]
+                },
+                E22: {
+                    description: "Liquidità di stop-hunt in contesti low-book",
+                    analysis: [
+                        "Sottoblocco Volume_Churn + per captare spike isolati in book sottile",
+                        "Sottoblocco DryUp + per individuare fasi prolungate di bassa liquidità"
+                    ]
+                }
+            },
+            negative: {
+                N01: {
+                    description: "Breakout con volumi deboli o decrescenti",
+                    analysis: [
+                        "Sottoblocco RelVol_Now + per segnalare volumi inferiori alla media",
+                        "Sottoblocco Reaction (breakout) + per catturare breakout senza conferma di volume"
+                    ]
+                },
+                N02: {
+                    description: "Range stagnante o chop senza direzione",
+                    analysis: [
+                        "Sottoblocco Compression + per rilevare range ristretto senza direzione",
+                        "Sottoblocco Volume_Churn + per identificare bassa liquidità nel chop"
+                    ]
+                },
+                N03: {
+                    description: "Inversioni micro o controtendenza dentro trend forte",
+                    analysis: [
+                        "Sottoblocco Reaction (rejection) + per identificare inversioni di breve periodo",
+                        "Sottoblocco Divergence_Multi + per rilevare micro-divergenze"
+                    ]
+                },
+                N04: {
+                    description: "Continuazione in pieno trend (per chi cerca reversal)",
+                    analysis: [
+                        "Sottoblocco Direction + per confermare trend continuo",
+                        "Sottoblocco Persistence_TPR + per evidenziare assenza di inversione"
+                    ]
+                },
+                N05: {
+                    description: "Breakout genuino e confermato (per inverse-breakout)",
+                    analysis: [
+                        "Sottoblocco Reaction (breakout) + per riconoscere breakout valido",
+                        "Sottoblocco RelVol_Now + per confermare volumi elevati",
+                        "Sottoblocco Spike + per assicurarsi che il range sia sufficientemente esplosivo",
+                        "Sottoblocco Persistence_TPR + per vedere se la rottura si consolida nel tempo"
+                    ]
+                },
+                N06: {
+                    description: "Consolidamento lento (per chi cerca spike di continuazione)",
+                    analysis: [
+                        "Sottoblocco Compression + per rilevare consolidamento lento",
+                        "Sottoblocco Spike + per assenza di esplosione di volatilità"
+                    ]
+                },
+                N07: {
+                    description: "Volatilità già alta o trend esausto",
+                    analysis: [
+                        "Sottoblocco ClimaxSpike + per registrare picchi estremi di volatilità",
+                        "Sottoblocco Exhaustion + per l'assenza di rimbalzo"
+                    ]
+                },
+                N08: {
+                    description: "Volatilità in aumento (per chi vuole fade)",
+                    analysis: [
+                        "Sottoblocco Spike + per misurare aumento continuo di range",
+                        "Sottoblocco Sustained_Breakout + per verificare persistenza"
+                    ]
+                },
+                N09: {
+                    description: "Supporto debole o non testato",
+                    analysis: [
+                        "Sottoblocco Swing + per indicare supporto debole",
+                        "Sottoblocco Reaction (rejection) + per mancanza di rimbalzo"
+                    ]
+                },
+                N10: {
+                    description: "Resistenza debole o appena formata",
+                    analysis: [
+                        "Sottoblocco Swing + per indicare resistenza debole",
+                        "Sottoblocco Reaction (rejection) + per mancanza di respinta significativa"
+                    ]
+                },
+                N11: {
+                    description: "Rapporto rischio/rendimento mediocre o incerto",
+                    analysis: [
+                        "Sottoblocco Reaction + per evidenziare setup con corpo e ombre limitati",
+                        "Sottoblocco Price_vs_Trend_Level + per misurare scarsa estensione"
+                    ]
+                },
+                N12: {
+                    description: "Breakout imminente (per range-sniper)",
+                    analysis: [
+                        "Sottoblocco Reaction (breakout) + per breakout imminente",
+                        "Sottoblocco Spike + se il breakout non è ancora partito"
+                    ]
+                },
+                N13: {
+                    description: "Gap già chiuso o sostenuto da trend forte",
+                    analysis: [
+                        "Sottoblocco Gap_Detect (custom) + per identificare gap già chiusi",
+                        "Sottoblocco Direction + per supporto da trend forte"
+                    ]
+                },
+                N14: {
+                    description: "Apertura piatta o bassa liquidità",
+                    analysis: [
+                        "Sottoblocco Session_Dynamics + per apertura piatta senza volumi",
+                        "Sottoblocco Range_D + per range limitato nelle prime barre"
+                    ]
+                },
+                N15: {
+                    description: "Sessione isolata senza overlap né catalyst",
+                    analysis: [
+                        "Sottoblocco Session_Dynamics + per sessione isolata senza overlap",
+                        "Sottoblocco Volatility_Breakout + per assenza di spike"
+                    ]
+                },
+                N16: {
+                    description: "Spike che continua senza ritracciare",
+                    analysis: [
+                        "Sottoblocco Spike + per rilevare spike che non ritracciano",
+                        "Sottoblocco Exhaustion + per mancanza di rimbalzo"
+                    ]
+                },
+                N17: {
+                    description: "Breakout già partito (box-escape tardivo)",
+                    analysis: [
+                        "Sottoblocco Reaction (breakout) + per rilevare breakout già in corso",
+                        "Sottoblocco RelVol_Now + per confermare volumi passati",
+                        "Sottoblocco Price_vs_Trend_Level + per valutare di quanto si è già allontanato dal livello di breakout",
+                        "Sottoblocco Spike + per misurare se c'è già stato un picco di range"
+                    ]
+                },
+                N18: {
+                    description: "Prezzo aderente a VWAP in trend stabile",
+                    analysis: [
+                        "Sottoblocco VWAP_Distance + per misurare prezzo aderente al VWAP",
+                        "Sottoblocco RelVol_Now + per verificare che, in prossimità del VWAP, i volumi non diano segnali contrari",
+                        "Sottoblocco Reaction (rejection) + per cogliere piccoli ritracci sul VWAP che confermino la congestione"
+                    ]
+                },
+                N19: {
+                    description: "Giornate neutre senza bias storico",
+                    analysis: [
+                        "Sottoblocco Seasonal_Flow (custom) + per assenza di bias storico",
+                        "Sottoblocco Compression + per intercettare range ristretto tipico delle giornate \"no-news\"",
+                        "Sottoblocco Volume_Churn + per segnalare liquidità piatta e intermittenze"
+                    ]
+                },
+                N20: {
+                    description: "Volatilità simmetrica o assenza di skew",
+                    analysis: [
+                        "Sottoblocco Volatility_Skew + per rilevare simmetria delle bande",
+                        "Sottoblocco Spike + per catturare espansioni non direzionali di volatilità",
+                        "Sottoblocco Direction + per verificare che non ci sia un bias di trend che lo skew non mostra"
+                    ]
+                },
+                N21: {
+                    description: "Trend intermittenti, inversioni lampo o news shock",
+                    analysis: [
+                        "Sottoblocco Persistence_TPR + per trend intermittenti",
+                        "Sottoblocco Reaction (rejection) + per inversioni lampo"
+                    ]
+                },
+                N22: {
+                    description: "Book sottile e spread larghi con slippage alto",
+                    analysis: [
+                        "Sottoblocco Volume_Churn + per evidenziare book sottile",
+                        "Sottoblocco DryUp + per fasi di bassa liquidità"
+                    ]
+                }
+            }
+        };
+
+        function renderEventiDetails() {
+            const box = document.getElementById('eventiDetailsContainer');
+            box.innerHTML = '';
+            
+            // Conteggio utilizzo eventi
+            const eventCounts = {};
+            filteredData.forEach(p => {
+                p.positiveEvents.forEach(e => { 
+                    if(!eventCounts[e]) eventCounts[e] = {pos:0, neg:0}; 
+                    eventCounts[e].pos++; 
+                });
+                p.negativeEvents.forEach(e => { 
+                    if(!eventCounts[e]) eventCounts[e] = {pos:0, neg:0}; 
+                    eventCounts[e].neg++; 
+                });
+            });
+
+            // Crea due sezioni: eventi positivi e negativi
+            ['positive', 'negative'].forEach(type => {
+                const title = document.createElement('h3');
+                title.style.color = type === 'positive' ? '#28a745' : '#dc3545';
+                title.style.marginTop = '20px';
+                title.style.marginBottom = '15px';
+                title.textContent = type === 'positive' ? 'Eventi Positivi' : 'Eventi Negativi';
+                box.appendChild(title);
+
+                // Per ogni evento di questo tipo
+                Object.entries(eventsDatabase[type] || {}).forEach(([eventId, eventData]) => {
+                    const counts = eventCounts[eventId] || {pos: 0, neg: 0};
+                    
+                    const card = document.createElement('div');
+                    card.style.border = '1px solid #dee2e6';
+                    card.style.borderRadius = '8px';
+                    card.style.padding = '15px';
+                    card.style.marginBottom = '15px';
+                    card.style.background = '#ffffff';
+                    card.style.boxShadow = '0 2px 4px rgba(0,0,0,0.05)';
+                    card.style.borderLeft = `6px solid ${type === 'positive' ? '#28a745' : '#dc3545'}`;
+
+                    card.innerHTML = `
+                        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
+                            <strong style="font-size:1.1em; color:${type === 'positive' ? '#28a745' : '#dc3545'}">${eventId}</strong>
+                            <span style="background:${type === 'positive' ? '#e8f5e9' : '#ffebee'}; 
+                                      padding:4px 8px; 
+                                      border-radius:12px; 
+                                      font-size:0.9em;">
+                                Usato in ${counts.pos + counts.neg} pedine
+                            </span>
+                        </div>
+                        <div style="color:#666; margin-bottom:12px;">
+                            ${eventData.description}
+                        </div>
+                        <div style="margin-top:10px;">
+                            <strong style="color:#495057;">Analisi Tecnica:</strong>
+                            <ul style="margin-top:5px; margin-bottom:0; padding-left:20px;">
+                                ${eventData.analysis.map(a => `<li style="color:#666; margin-bottom:4px;">${a}</li>`).join('')}
+                            </ul>
+                        </div>
+                    `;
+
+                    box.appendChild(card);
+                });
+            });
+        }
+
+        function renderOverview() {
+            const container = document.getElementById('familyGrid');
+            container.innerHTML = '';
+            
+            // Raggruppa per famiglia
+            const familyGroups = {};
+            filteredData.forEach(pedina => {
+                if (!familyGroups[pedina.family]) {
+                    familyGroups[pedina.family] = [];
+                }
+                familyGroups[pedina.family].push(pedina);
+            });
+            
+            Object.entries(familyGroups).forEach(([family, pedine]) => {
+                const card = document.createElement('div');
+                card.className = 'family-card';
+                card.style.setProperty('--color', familyColors[family]);
+                
+                const totalPositive = new Set(pedine.flatMap(p => p.positiveEvents)).size;
+                const totalNegative = new Set(pedine.flatMap(p => p.negativeEvents)).size;
+                const totalSessions = new Set(pedine.flatMap(p => p.sessions)).size;
+                
+                card.innerHTML = `
+                    <div class="family-name">${family}</div>
+                    <div class="pedine-list">
+                        ${pedine.map(p => `<span class="pedina-tag">${p.name.replace('_', ' ')}</span>`).join('')}
+                    </div>
+                    <div class="family-stats">
+                        <div class="family-stat">
+                            <div class="family-stat-number">${pedine.length}</div>
+                            <div>Pedine</div>
+                        </div>
+                        <div class="family-stat">
+                            <div class="family-stat-number">${totalPositive}</div>
+                            <div>Eventi +</div>
+                        </div>
+                        <div class="family-stat">
+                            <div class="family-stat-number">${totalNegative}</div>
+                            <div>Eventi -</div>
+                        </div>
+                    </div>
+                `;
+                
+                container.appendChild(card);
+            });
+        }
+
+        function renderScatterPlot() {
+            const canvas = document.getElementById('scatterChart');
+            const ctx = canvas.getContext('2d');
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            circleData.length = 0; // reset stored circles
+
+            // Configuration
+            const padding = 160;
+            const leftOffset = canvas.width * 0.1; // 10% blank before Sydney
+            const chartWidth = canvas.width - padding * 2 - leftOffset;
+            const chartHeight = canvas.height - padding * 2;
+            const sessions = ["", "Sydney", "Tokyo", "London", "New York", "Nessuna"];
+            const families = Object.keys(familyColors);
+            const sectionCount = 2; // mono, multi
+            const stripeCount = families.length * sectionCount;
+            const stripeHeight = chartHeight / stripeCount;
+            // X positions: include blank column
+            const baseX = sessions.map((_, i) => padding + leftOffset + (i / (sessions.length - 1)) * chartWidth);
+
+            // Group data
+            const mono = {}, multi = {};
+            families.forEach(f => {
+                mono[f] = {}; multi[f] = {};
+                sessions.forEach(s => { mono[f][s] = []; multi[f][s] = []; });
+            });
+            filteredData.forEach(p => {
+                const target = p.sessions.length > 1 ? multi : mono;
+                const dest = p.sessions.length ? p.sessions : ["Nessuna"];
+                dest.forEach(s => { if (target[p.family][s]) target[p.family][s].push(p); });
+            });
+
+            // Vertical grid + session labels (skip index 0 for blank)
+            ctx.strokeStyle = '#e9ecef'; ctx.lineWidth = 1;
+            baseX.forEach((x, i) => {
+                ctx.beginPath();
+                ctx.moveTo(x, padding);
+                ctx.lineTo(x, canvas.height - padding);
+                ctx.stroke();
+                if (sessions[i]) {
+                    ctx.fillStyle = '#495057'; ctx.font = '14px Arial'; ctx.textAlign = 'center';
+                    ctx.fillText(sessions[i], x, canvas.height - padding + 50);
+                }
+            });
+
+            // Y-axis
+            ctx.strokeStyle = '#495057'; ctx.lineWidth = 2;
+            ctx.beginPath();
+            ctx.moveTo(padding, padding); ctx.lineTo(padding, canvas.height - padding); ctx.stroke();
+
+            // Draw divider between mono & multi
+            const dividerY = padding + stripeHeight * families.length;
+            ctx.strokeStyle = '#888'; ctx.lineWidth = 3;
+            ctx.beginPath();
+            ctx.moveTo(padding, dividerY);
+            ctx.lineTo(canvas.width - padding, dividerY);
+            ctx.stroke();
+
+            // Section labels
+            ctx.fillStyle = '#495057'; ctx.font = '14px Arial'; ctx.textAlign = 'center';
+            ctx.fillText('Mono-sessione', padding + leftOffset / 2, padding + stripeHeight * families.length / 2);
+            ctx.fillText('Multi-sessione', padding + leftOffset / 2, dividerY + stripeHeight * families.length / 2);
+
+            // Family labels on Y (colored)
+            families.forEach((f, idx) => {
+                [0,1].forEach(sec => {
+                    const stripeIdx = sec * families.length + idx;
+                    const y = padding + stripeHeight * (stripeIdx + 0.5);
+                    ctx.fillStyle = familyColors[f];
+                    ctx.font = '12px Arial'; ctx.textAlign = 'right';
+                    ctx.fillText(f, padding - 20, y + 4);
+                });
+            });
+
+            // Highlight multi-session background
+            ctx.fillStyle = 'rgba(0,120,255,0.05)';
+            ctx.fillRect(padding, dividerY, chartWidth + leftOffset, chartHeight / 2);
+
+            // Draw points grouped
+            function drawGroup(group, sec) {
+                families.forEach((f, idx) => {
+                    const stripeIdx = sec * families.length + idx;
+                    const baseY = padding + stripeHeight * (stripeIdx + 0.5);
+                    sessions.forEach((s, si) => {
+                        const pts = group[f][s];
+                        const x = baseX[si];
+                        if (pts.length) {
+                            const gap = 35;
+                            const startY = baseY - (pts.length - 1) / 2 * gap;
+                            pts.forEach((p, pi) => {
+                                let y = startY + pi * gap;
+                                // keep points inside vertical bounds
+                                y = Math.max(y, padding + 8);
+                                y = Math.min(y, canvas.height - padding - 8);
+                                ctx.fillStyle = familyColors[f];
+                                ctx.beginPath();
+                                ctx.arc(x, y, 8, 0, 2 * Math.PI);
+                                ctx.fill();
+                                ctx.strokeStyle = '#333'; ctx.lineWidth = 1; ctx.stroke();
+                                // store for hover detection
+                                circleData.push({
+                                    x, y, r: 8,
+                                    data: {
+                                        name: p.name,
+                                        family: p.family,
+                                        sessions: p.sessions.join(', '),
+                                        positive: p.positiveEvents.join(', '),
+                                        negative: p.negativeEvents.join(', ')
+                                    }
+                                });
+                                // Removed circle label drawing here
+                            });
+                        }
+                    });
+                });
+            }
+            drawGroup(mono, 0);
+            drawGroup(multi, 1);
+
+            // Mouse hover tooltip
+            const canvasEl = document.getElementById('scatterChart');
+            canvasEl.onmousemove = function(evt) {
+                const pos = getMousePos(canvasEl, evt);
+                const hit = circleData.find(c => {
+                    const dx = pos.x - c.x;
+                    const dy = pos.y - c.y;
+                    return dx*dx + dy*dy <= c.r*c.r;
+                });
+                if (hit) {
+                    tooltip.style.display = 'block';
+                    tooltip.style.left = evt.pageX + 10 + 'px';
+                    tooltip.style.top = evt.pageY + 10 + 'px';
+                    tooltip.innerHTML =
+                        `<strong>${hit.data.name}</strong><br>
+                         Famiglia: ${hit.data.family}<br>
+                         Sessioni: ${hit.data.sessions}<br>
+                         + Eventi: ${hit.data.positive}<br>
+                         - Eventi: ${hit.data.negative}`;
+                } else {
+                    tooltip.style.display = 'none';
+                }
+            };
+            canvasEl.onmouseout = () => tooltip.style.display = 'none';
+
+            // Legend rebuild
+            const legend = document.getElementById('scatterLegend');
+            legend.innerHTML = '';
+            Object.entries(familyColors).forEach(([fam, col]) => {
+                const item = document.createElement('div');
+                item.className = 'legend-item';
+                item.innerHTML = `<div class="legend-color" style="background:${col}"></div><span>${fam}</span>`;
+                legend.appendChild(item);
+            });
+        }
+
+        function renderSessionsChart() {
+            const canvas = document.getElementById('sessionsChart');
+            const ctx = canvas.getContext('2d');
+
+            // Determine which sessions to show based on the sessionFilter dropdown
+            const sessionFilterValue = document.getElementById('sessionFilter').value;
+            const sessionsToShow = sessionFilterValue === 'all'
+                ? Object.keys({
+                    Sydney: {},
+                    Tokyo: {},
+                    London: {},
+                    "New York": {}
+                })
+                : [sessionFilterValue];
+
+            // Prepara dati
+            const sessionData = {
+                Sydney: {},
+                Tokyo: {},
+                London: {},
+                "New York": {}
+            };
+
+            // Inizializza contatori per famiglia
+            Object.keys(sessionData).forEach(session => {
+                Object.keys(familyColors).forEach(family => {
+                    sessionData[session][family] = 0;
+                });
+            });
+
+            // Conta pedine per sessione e famiglia
+            filteredData.forEach(pedina => {
+                pedina.sessions.forEach(session => {
+                    if (sessionData[session]) {
+                        sessionData[session][pedina.family]++;
+                    }
+                });
+            });
+
+            if (Chart.getChart(canvas)) {
+                Chart.getChart(canvas).destroy();
+            }
+
+            // Prepara datasets per Chart.js
+            const datasets = Object.entries(familyColors).map(([family, color]) => ({
+                label: family,
+                data: sessionsToShow.map(session => sessionData[session][family]),
+                backgroundColor: color,
+                borderColor: color,
+                borderWidth: 2
+            }));
+
+            new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: sessionsToShow,
+                    datasets: datasets
+                },
+                options: {
+                    layout: {
+                        padding: { top: 25, bottom: 25, left: 25, right: 25 }
+                    },
+                    responsive: true,
+                    scales: {
+                        x: {
+                            stacked: true,
+                            grid: {
+                                display: false
+                            }
+                        },
+                        y: {
+                            stacked: true,
+                            beginAtZero: true,
+                            grid: {
+                                color: '#f1f5f9'
+                            },
+                            title: {
+                                display: true,
+                                text: 'Numero Pedine'
+                            }
+                        },
+                        plugins: {
+                            legend: {
+                                position: 'top',
+                            },
+                            tooltip: {
+                                callbacks: {
+                                    title: function(context) {
+                                        // session label
+                                        return context[0].label;
+                                    },
+                                    label: function(context) {
+                                        // list pedine in this family and session
+                                        const family = context.dataset.label;
+                                        const session = context.label;
+                                        const names = filteredData
+                                            .filter(p => p.family === family && p.sessions.includes(session))
+                                            .map(p => p.name.replace('_', ' '));
+                                        return names;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        function renderEventsMatrix(type) {   // type: 'pos' | 'neg'
+            const gridId  = type === 'pos' ? 'matrixGrid'      : 'negMatrixGrid';
+            const wrapId  = type === 'pos' ? 'matrixContainer' : 'negMatrixContainer';
+            const grid    = document.getElementById(gridId);
+            grid.innerHTML = '';
+
+            /* 1) Raccolta eventi unici */
+            const eventsSet = new Set();
+            pedineData.forEach(p =>
+                (type === 'pos' ? p.positiveEvents : p.negativeEvents)
+                    .forEach(ev => eventsSet.add(ev))
+            );
+            const events = Array.from(eventsSet).sort();
+            const n = events.length;
+
+            /* 2) Matrice conteggi co‑occorrenza */
+            const counts = Array.from({ length: n }, () => Array(n).fill(0));
+            let max = 0;
+            pedineData.forEach(p => {
+                const list = type === 'pos' ? p.positiveEvents : p.negativeEvents;
+                events.forEach((e1, i) => {
+                    if (!list.includes(e1)) return;
+                    events.forEach((e2, j) => {
+                        if (list.includes(e2)) {
+                            counts[i][j]++;
+                            max = Math.max(max, counts[i][j]);
+                        }
+                    });
+                });
+            });
+
+            /* 3) Layout griglia */
+            grid.style.gridTemplateColumns = `max-content repeat(${n}, 25px)`;
+            grid.style.gridTemplateRows    = `90px repeat(${n}, 25px)`;
+            grid.style.gridAutoRows        = '25px';
+            document.getElementById(wrapId).style.width = 'fit-content';
+
+            /* 4) Cella angolo vuoto */
+            grid.appendChild(Object.assign(document.createElement('div'), { style: 'background:#fff' }));
+
+            /* 5) Etichette asse X (verticali) */
+            events.forEach(ev => {
+                const xLab = document.createElement('div');
+                xLab.className = 'matrix-label matrix-label-x';
+                xLab.textContent = ev;
+                grid.appendChild(xLab);
+            });
+
+            /* 6) Righe con etichetta Y e celle */
+            for (let i = 0; i < n; i++) {
+                // Etichetta Y
+                const yLab = document.createElement('div');
+                yLab.className = 'matrix-label matrix-label-y';
+                yLab.textContent = events[i];
+                grid.appendChild(yLab);
+
+                // Celle dati
+                for (let j = 0; j < n; j++) {
+                    const val  = counts[i][j];
+                    const cell = document.createElement('div');
+                    cell.className = 'matrix-cell';
+                    if (val) {
+                        const light = 90 - (val / max) * 60;
+                        cell.style.backgroundColor = `hsl(220, 70%, ${light}%)`;
+                        cell.textContent = val;
+                    } else {
+                        cell.style.backgroundColor = '#f8f9fa';
+                    }
+
+                    // Tooltip con pedine che contengono entrambi gli eventi (colored)
+                    const coinvolte = pedineData
+                        .filter(p => {
+                            const l = type === 'pos' ? p.positiveEvents : p.negativeEvents;
+                            return l.includes(events[i]) && l.includes(events[j]);
+                        })
+                        .map(p => p.name.replace('_', ' '));
+                    // Color the names by family
+                    const coloredNames = coinvolte.map(n => {
+                        // trova colore famiglia
+                        const ped = pedineData.find(p => p.name.replace('_',' ') === n);
+                        const col = ped ? familyColors[ped.family] : '#000';
+                        return `<span style="color:${col}">${n}</span>`;
+                    }).join(', ');
+                    cell.onmousemove = e => {
+                        const html = `<strong>${events[i]} & ${events[j]}</strong><br>
+                                      Co-occorrenze: <strong>${val}</strong><br>${coloredNames}`;
+                        showTooltip(html, e.pageX, e.pageY);
+                    };
+                    cell.onmouseleave = hideTooltip;
+                    grid.appendChild(cell);
+                }
+            }
+        }
+
+        function renderEventsPos(){ renderEventsMatrix('pos'); }
+        function renderEventsNeg(){ renderEventsMatrix('neg'); }
+
+        function showEventDetails(event1, event2, cooccurrence) {
+            const pedineWithBoth = pedineData.filter(pedina => {
+                const allEvents = [...pedina.positiveEvents, ...pedina.negativeEvents];
+                return allEvents.includes(event1) && allEvents.includes(event2);
+            });
+            
+            const details = pedineWithBoth.map(p => 
+                `${p.name} (${p.family})`
+            ).join('\n');
+            
+            alert(`Eventi ${event1} ↔ ${event2}\n\nCo-occorrenze: ${cooccurrence}\n\nPedine coinvolte:\n${details}`);
+        }
+
+        function updateStats() {
+            const allPositive = new Set();
+            const allNegative = new Set();
+            const allFamilies = new Set();
+            
+            filteredData.forEach(pedina => {
+                pedina.positiveEvents.forEach(e => allPositive.add(e));
+                pedina.negativeEvents.forEach(e => allNegative.add(e));
+                allFamilies.add(pedina.family);
+            });
+            
+            document.getElementById('totalPedine').textContent = filteredData.length;
+            document.getElementById('totalPositive').textContent = allPositive.size;
+            document.getElementById('totalNegative').textContent = allNegative.size;
+            document.getElementById('totalFamilies').textContent = allFamilies.size;
+        }
+</script>
+<script>
+function renderOverlap() {
+    const container = document.getElementById('overlapMatrixGrid');
+    // axis labels are rendered inline, so we don't use labels container anymore
+    container.innerHTML = '';
+    // Use filteredData for overlap
+    const pedine = filteredData;
+    const names = pedine.map(p => p.name.replace('_', ' '));
+    const n = names.length;
+
+    // Map pedina name to its family color
+    const nameToColor = {};
+    pedine.forEach(p => { nameToColor[p.name.replace('_', ' ')] = familyColors[p.family]; });
+
+    // Ensure good contrast: lighten very dark backgrounds
+    function ensureContrast(hex) {
+        if (!hex) return '#e9ecef';
+        const rgb = parseInt(hex.slice(1), 16);
+        const r = (rgb >> 16) & 255, g = (rgb >> 8) & 255, b = rgb & 255;
+        const luminance = 0.299*r + 0.587*g + 0.114*b;
+        return luminance < 110 ? '#ffffff' : '#000000';
+    }
+
+    // Compute shared events counts
+    const sharedCounts = [];
+    let maxShared = 0;
+    for (let i = 0; i < n; i++) {
+        sharedCounts[i] = [];
+        const ev1 = [...pedine[i].positiveEvents, ...pedine[i].negativeEvents];
+        for (let j = 0; j < n; j++) {
+            const ev2 = [...pedine[j].positiveEvents, ...pedine[j].negativeEvents];
+            const shared = ev1.filter(e => ev2.includes(e)).length;
+            sharedCounts[i][j] = shared;
+            maxShared = Math.max(maxShared, shared);
+        }
+    }
+    // Setup grid template: first column auto, rest fixed width (25px)
+    container.style.gridTemplateColumns = `max-content repeat(${n}, 25px)`;
+    // first row for X labels: make it 140px, rest 25px
+    container.style.gridTemplateRows = `140px repeat(${n}, 25px)`;
+    // Empty top-left cell
+    const empty = document.createElement('div');
+    empty.style.background='#fff';
+    container.appendChild(empty);
+    // Top X labels
+    for (let j = 0; j < n; j++) {
+        const xLab = document.createElement('div');
+        xLab.className = 'matrix-label matrix-label-x';
+        xLab.style.padding = '0 4px';
+        xLab.style.backgroundColor = nameToColor[names[j]] || '#e9ecef';
+        xLab.style.color = ensureContrast(nameToColor[names[j]]);
+        xLab.textContent = names[j];
+        container.appendChild(xLab);
+    }
+    // Rows
+    for (let i = 0; i < n; i++) {
+        // Y label
+        const yLab = document.createElement('div');
+        yLab.className = 'matrix-label matrix-label-y';
+        yLab.style.backgroundColor = nameToColor[names[i]] || '#e9ecef';
+        yLab.style.color = ensureContrast(nameToColor[names[i]]);
+        yLab.textContent = names[i];
+        container.appendChild(yLab);
+        for (let j = 0; j < n; j++) {
+            const count = sharedCounts[i][j];
+            const cell = document.createElement('div');
+            cell.className = 'matrix-cell';
+            if (count > 0) {
+                // red hue, intensity by shared/maxShared
+                const light = 90 - (count / maxShared) * 60;
+                cell.style.backgroundColor = `hsl(0, 70%, ${light}%)`;
+                cell.textContent = count;
+            } else {
+                cell.style.backgroundColor = '#f8f9fa';
+            }
+            // Tooltip with colored names
+            const htmlNames = [
+                `<span style="color:${nameToColor[names[i]]}">${names[i]}</span>`,
+                `<span style="color:${nameToColor[names[j]]}">${names[j]}</span>`
+            ].join(' & ');
+            cell.onmousemove = e => showTooltip(`${htmlNames}<br><strong>${count} eventi in comune</strong>`, e.pageX, e.pageY);
+            cell.onmouseleave = hideTooltip;
+            container.appendChild(cell);
+        }
+    }
+    // No more matrix-labels container needed
+}
+</script>
+</body>
+</html>
+</body>
+</html>
