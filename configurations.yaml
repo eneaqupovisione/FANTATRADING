@@ -1,0 +1,2461 @@
+Breakout Hunter:
+  Candles Core:
+    pattern:
+    - Inside-Bar
+    - Doji
+    - Spinning-Top
+    - Marubozu
+    - Outside-Bar
+    position:
+    - At-Support
+    - At-Resistance
+    - At-Breakout
+  Level Core:
+    extension: []
+    history:
+    - Mixed-History
+    - Frequently-Broken
+    - Multiple-Hold
+    kind:
+    - Supporto/Resistenza Statica
+    - Massimo/Minimo di Sessione
+    - Closing Level
+    - High/Low Precedente
+    - Livello di Liquidità
+    - Volume Spike Zone
+    orientation:
+    - Pro-Trend
+    strength:
+    - Weak
+    - Moderate
+    tf_class:
+    - M15
+    - M30
+    - H1
+    - H4
+    - D1
+  Momentum Core:
+    direction:
+    - Positive
+    - Negative
+    phase:
+    - Ignition
+    - Acceleration
+    - Continuation
+    speed:
+    - Explosive
+    - Fast
+    strength:
+    - Moderate
+    - High
+    - Extreme
+  Timing Core:
+    day_type:
+    - Regular
+    - FOMC-Day
+    - Earnings-Heavy
+    - News-Heavy
+    - Expiry-Day
+    - High-Impact-Events
+    - NFP-Day
+    - Data-Release-Day
+    - Central-Bank-Day
+    dow:
+    - Tuesday
+    - Wednesday
+    - Thursday
+    market_condition:
+    - Trending
+    - High-Volatility
+    - Breakout-Mode
+    - Risk-On
+    month_phase:
+    - Early-Month
+    - Mid-Month
+    session_phase:
+    - Opening
+    - Early-Session
+    - Late-Session
+    - Pre-Market
+  Trend Core:
+    direction:
+    - Uptrend
+    - Downtrend
+    - Undefined
+    phase:
+    - Beginning
+    - Acceleration
+    - Middle
+    quality:
+    - Clean
+    - Impulsive
+    - Smooth
+    strength:
+    - Weak
+    - Moderate
+    - Strong
+    - Very-Strong
+  Volatility Core:
+    behaviour:
+    - Expanding
+    - Explosive
+    - Stable
+    strength:
+    - Above-Average
+    - High
+    - Normal
+    - Very-High
+  Volume Core:
+    behaviour:
+    - Increasing
+    strength:
+    - High
+    - Very-High
+    - Above-Average
+Closing Dip:
+  Candles Core:
+    pattern:
+    - Inside-Bar
+    - Pin-Bar
+    - Spinning-Top
+    - Marubozu
+    - Outside-Bar
+    position:
+    - After-Trend
+    - Mid-Range
+    - At-Breakout
+  Level Core:
+    extension: []
+    history:
+    - Mixed-History
+    - Single-Hold
+    - Untested
+    kind:
+    - Supporto/Resistenza Statica
+    - VWAP
+    - High/Low Precedente
+    - Massimo/Minimo di Sessione
+    - Closing Level
+    - POC
+    - Media Mobile Dinamica
+    - Fibonacci Retracement
+    - Livello di Liquidità
+    - Pivot Point
+    - Banda di Bollinger
+    - Volume Spike Zone
+    - Micro Support/Resistenza
+    orientation:
+    - Pro-Trend
+    - Anti-Trend
+    strength:
+    - Moderate
+    - Strong
+    tf_class:
+    - M5
+    - M15
+    - M30
+    - H1
+  Momentum Core:
+    direction:
+    - Positive
+    - Negative
+    - Neutral
+    phase:
+    - Continuation
+    - Deceleration
+    speed:
+    - Moderate
+    - Slow
+    - Stagnant
+    strength:
+    - Low
+    - Moderate
+    - High
+  Timing Core:
+    day_type:
+    - Regular
+    - Low-Volume
+    - Holiday-Adjacent
+    - Low-Impact-Events
+    dow:
+    - Thursday
+    - Friday
+    - Wednesday
+    - Tuesday
+    - Monday
+    market_condition:
+    - Trending
+    - Risk-On
+    - Risk-Off
+    - Ranging
+    - Consolidation
+    month_phase:
+    - Quarter-End
+    - End-Month
+    session_phase:
+    - Closing
+    - Late-Session
+    - After-Hours
+    - Overnight
+  Trend Core:
+    direction:
+    - Uptrend
+    - Downtrend
+    phase:
+    - Deceleration
+    - End
+    quality:
+    - Smooth
+    - Clean
+    strength:
+    - Weak
+    - Strong
+    - Moderate
+  Volatility Core:
+    behaviour:
+    - Stable
+    - Fading
+    - Contracting
+    strength:
+    - Normal
+    - Below-Average
+    - Low
+  Volume Core:
+    behaviour:
+    - Stable
+    - Increasing
+    - Decreasing
+    strength:
+    - Above-Average
+    - Average
+    - Below-Average
+    - Low
+    - Very-Low
+Continuation Flash:
+  Candles Core:
+    pattern:
+    - Pin-Bar
+    - Inside-Bar
+    - Doji
+    - Marubozu
+    - Engulfing
+    position:
+    - Mid-Range
+    - After-Trend
+  Level Core:
+    extension: []
+    history:
+    - Single-Hold
+    - Multiple-Hold
+    - Untested
+    kind:
+    - POC
+    - VWAP
+    - Livello di Liquidità
+    - Livello di Gap
+    - Micro Support/Resistenza
+    - Media Mobile Dinamica
+    - Opening Range
+    - Fibonacci Retracement
+    - Volume Spike Zone
+    - Channel-Lines
+    orientation:
+    - Pro-Trend
+    strength:
+    - Moderate
+    - Strong
+    tf_class:
+    - M1
+    - M5
+    - M15
+    - M30
+    - H1
+  Momentum Core:
+    direction:
+    - Positive
+    - Negative
+    phase:
+    - Continuation
+    - Acceleration
+    speed:
+    - Fast
+    - Explosive
+    strength:
+    - High
+    - Extreme
+    - Moderate
+  Timing Core:
+    day_type:
+    - Regular
+    - Low-Impact-Events
+    - Low-Volume
+    dow:
+    - Tuesday
+    - Wednesday
+    - Thursday
+    market_condition:
+    - Trending
+    - Risk-Off
+    - Low-Volatility
+    - High-Volatility
+    month_phase:
+    - Early-Month
+    - Mid-Month
+    session_phase:
+    - Early-Session
+    - Mid-Session
+    - Late-Session
+  Trend Core:
+    direction:
+    - Uptrend
+    - Downtrend
+    phase:
+    - Acceleration
+    - Middle
+    - Beginning
+    quality:
+    - Clean
+    - Smooth
+    - Impulsive
+    strength:
+    - Strong
+    - Very-Strong
+  Volatility Core:
+    behaviour:
+    - Stable
+    - Expanding
+    - Contracting
+    strength:
+    - Normal
+    - Above-Average
+    - Below-Average
+  Volume Core:
+    behaviour:
+    - Increasing
+    - Stable
+    strength:
+    - Average
+    - Above-Average
+    - High
+Gap Fill:
+  Candles Core:
+    pattern:
+    - Outside-Bar
+    - Marubozu
+    - Inside-Bar
+    - Pin-Bar
+    position:
+    - At-Low
+    - At-High
+    - Mid-Range
+  Level Core:
+    extension: []
+    history:
+    - Untested
+    - Single-Hold
+    kind:
+    - Livello di Gap
+    - VWAP
+    - Opening Range
+    - High/Low Precedente
+    - News Level
+    - POC
+    orientation:
+    - Neutrale
+    - Anti-Trend
+    strength:
+    - Moderate
+    - Strong
+    tf_class:
+    - M5
+    - M15
+    - M30
+    - H1
+    - H4
+    - D1
+  Momentum Core:
+    direction:
+    - Positive
+    - Negative
+    phase:
+    - Reversal
+    - Acceleration
+    - Ignition
+    - Continuation
+    speed:
+    - Moderate
+    - Fast
+    - Explosive
+    - Slow
+    strength:
+    - Extreme
+    - High
+  Timing Core:
+    day_type:
+    - Low-Impact-Events
+    - Low-Volume
+    - Holiday-Adjacent
+    - Data-Release-Day
+    - Earnings-Heavy
+    - Expiry-Day
+    - High-Impact-Events
+    - Central-Bank-Day
+    - News-Heavy
+    - Regular
+    dow:
+    - Weekend-Gap
+    - Monday
+    - Friday
+    - Thursday
+    - Wednesday
+    - Tuesday
+    market_condition:
+    - High-Volatility
+    - Transition-Zone
+    - Risk-On
+    - Breakout-Mode
+    month_phase:
+    - Month-End-Rebalancing
+    - Early-Month
+    - Mid-Month
+    session_phase:
+    - Opening
+    - Early-Session
+    - Late-Session
+    - Mid-Session
+  Trend Core:
+    direction:
+    - Uptrend
+    - Downtrend
+    - Sideways
+    - Undefined
+    phase:
+    - Reversal
+    - Beginning
+    - Acceleration
+    - Middle
+    - Deceleration
+    - End
+    quality:
+    - Impulsive
+    - Volatile
+    - Smooth
+    - Clean
+    strength:
+    - Very-Weak
+    - Weak
+    - Moderate
+  Volatility Core:
+    behaviour:
+    - Fading
+    - Expanding
+    - Contracting
+    - Stable
+    strength:
+    - Normal
+    - Below-Average
+    - Above-Average
+    - High
+    - Very-High
+    - Low
+  Volume Core:
+    behaviour:
+    - Increasing
+    - Decreasing
+    - Stable
+    strength:
+    - Above-Average
+    - High
+    - Very-High
+    - Average
+    - Below-Average
+    - Low
+    - Very-Low
+Inverse Breakout:
+  Candles Core:
+    pattern:
+    - Outside-Bar
+    - Marubozu
+    - Engulfing
+    - Pin-Bar
+    - Doji
+    - Spinning-Top
+    - Hammer
+    - Shooting-Star
+    - Harami
+    position:
+    - At-Breakout
+    - At-Support
+    - At-Resistance
+  Level Core:
+    extension: []
+    history:
+    - Mixed-History
+    - Frequently-Broken
+    kind:
+    - Supporto/Resistenza Statica
+    - High/Low Precedente
+    - Range Boundary
+    - Trendline
+    - Channel-Lines
+    - Massimo/Minimo di Sessione
+    - Media Mobile Dinamica
+    - Banda di Bollinger
+    orientation:
+    - Anti-Trend
+    strength:
+    - Strong
+    - Very-Strong
+    tf_class:
+    - M1
+    - M5
+    - M15
+    - M30
+    - H1
+  Momentum Core:
+    direction:
+    - Positive
+    - Negative
+    phase:
+    - Deceleration
+    - Exhaustion
+    - Reversal
+    speed:
+    - Stagnant
+    - Slow
+    - Moderate
+    strength:
+    - Low
+    - Minimal
+  Timing Core:
+    day_type:
+    - News-Heavy
+    - Central-Bank-Day
+    - Data-Release-Day
+    - Earnings-Heavy
+    - Expiry-Day
+    - High-Impact-Events
+    - Holiday-Adjacent
+    dow:
+    - Monday
+    - Friday
+    - Tuesday
+    - Wednesday
+    - Thursday
+    market_condition:
+    - High-Volatility
+    - Transition-Zone
+    - Ranging
+    - Consolidation
+    - Risk-On
+    - Risk-Off
+    month_phase:
+    - End-Month
+    - Quarter-End
+    - Month-End-Rebalancing
+    - Mid-Month
+    session_phase:
+    - Opening
+    - Early-Session
+    - Pre-Market
+    - Closing
+    - Overnight
+    - After-Hours
+  Trend Core:
+    direction:
+    - Downtrend
+    - Uptrend
+    - Sideways
+    - Undefined
+    phase:
+    - Deceleration
+    - End
+    - Reversal
+    - Middle
+    quality:
+    - Choppy
+    - Volatile
+    - Impulsive
+    strength:
+    - Very-Weak
+    - Weak
+  Volatility Core:
+    behaviour:
+    - Contracting
+    - Stable
+    - Fading
+    - Expanding
+    strength:
+    - Extreme
+    - Very-High
+    - High
+    - Very-Low
+    - Low
+    - Below-Average
+  Volume Core:
+    behaviour:
+    - Decreasing
+    - Stable
+    strength:
+    - Very-Low
+    - Low
+    - Below-Average
+    - Average
+Liquidity Grab:
+  Candles Core:
+    pattern:
+    - Pin-Bar
+    - Outside-Bar
+    - Hammer
+    - Shooting-Star
+    - Marubozu
+    position:
+    - At-Support
+    - At-Resistance
+    - At-Breakout
+  Level Core:
+    extension: []
+    history:
+    - Multiple-Hold
+    - Mixed-History
+    - Frequently-Broken
+    kind:
+    - Supporto/Resistenza Statica
+    - POC
+    - High/Low Precedente
+    - Range Boundary
+    - Livello di Liquidità
+    - Pivot Point
+    - Volume Spike Zone
+    - Massimo/Minimo di Sessione
+    - Opening Range
+    - Livello di Gap
+    - Channel-Lines
+    - Micro Support/Resistenza
+    orientation:
+    - Neutrale
+    - Pro-Trend
+    - Anti-Trend
+    strength:
+    - Moderate
+    - Weak
+    tf_class:
+    - M1
+    - M5
+    - M15
+    - M30
+    - H1
+  Momentum Core:
+    direction:
+    - Neutral
+    - Oscillating
+    phase:
+    - Exhaustion
+    - Continuation
+    - Acceleration
+    - Deceleration
+    speed:
+    - Moderate
+    - Fast
+    - Explosive
+    strength:
+    - Moderate
+    - High
+    - Low
+    - Extreme
+  Timing Core:
+    day_type:
+    - High-Impact-Events
+    - Expiry-Day
+    - Earnings-Heavy
+    - Data-Release-Day
+    - Holiday-Adjacent
+    - Central-Bank-Day
+    - News-Heavy
+    dow:
+    - Monday
+    - Friday
+    - Wednesday
+    market_condition:
+    - Transition-Zone
+    - High-Volatility
+    - Breakout-Mode
+    - Risk-On
+    - Consolidation
+    month_phase:
+    - End-Month
+    - Month-End-Rebalancing
+    - Quarter-End
+    - Mid-Month
+    session_phase:
+    - Opening
+    - Early-Session
+    - Closing
+    - Mid-Session
+    - Late-Session
+    - Pre-Market
+  Trend Core:
+    direction:
+    - Sideways
+    - Downtrend
+    - Uptrend
+    - Undefined
+    phase:
+    - Deceleration
+    - End
+    - Reversal
+    - Middle
+    - Acceleration
+    - Beginning
+    quality:
+    - Choppy
+    - Volatile
+    - Impulsive
+    strength:
+    - Very-Weak
+    - Weak
+    - Moderate
+  Volatility Core:
+    behaviour:
+    - Expanding
+    - Explosive
+    - Oscillating
+    strength:
+    - Above-Average
+    - High
+    - Very-High
+    - Normal
+  Volume Core:
+    behaviour:
+    - Increasing
+    - Climactic
+    strength:
+    - Very-High
+    - High
+    - Above-Average
+Mean Reversion:
+  Candles Core:
+    pattern:
+    - Outside-Bar
+    - Marubozu
+    - Pin-Bar
+    - Engulfing
+    - Doji
+    - Spinning-Top
+    - Shooting-Star
+    - Hammer
+    position:
+    - At-High
+    - At-Low
+  Level Core:
+    extension: []
+    history:
+    - Single-Hold
+    - Untested
+    - Multiple-Hold
+    - Frequently-Broken
+    - Mixed-History
+    kind:
+    - Supporto/Resistenza Statica
+    - Media Mobile Dinamica
+    - VWAP
+    - POC
+    - Fibonacci Retracement
+    - Banda di Bollinger
+    - Closing Level
+    - Livello di Gap
+    - Channel-Lines
+    - Micro Support/Resistenza
+    orientation:
+    - Anti-Trend
+    strength:
+    - Strong
+    - Very-Strong
+    tf_class:
+    - M1
+    - M5
+    - M15
+    - H4
+    - H1
+    - M30
+    - D1
+    - W1
+    - MN1
+  Momentum Core:
+    direction:
+    - Positive
+    - Negative
+    phase:
+    - Exhaustion
+    - Deceleration
+    - Reversal
+    speed:
+    - Explosive
+    - Fast
+    - Moderate
+    strength:
+    - Extreme
+    - High
+  Timing Core:
+    day_type:
+    - News-Heavy
+    - High-Impact-Events
+    - Holiday-Adjacent
+    - Data-Release-Day
+    - Earnings-Heavy
+    - Expiry-Day
+    - Central-Bank-Day
+    dow:
+    - Monday
+    - Friday
+    - Wednesday
+    market_condition:
+    - High-Volatility
+    - Ranging
+    - Risk-On
+    - Transition-Zone
+    month_phase:
+    - Month-End-Rebalancing
+    - Quarter-End
+    - End-Month
+    session_phase:
+    - Mid-Session
+    - Late-Session
+    - Closing
+    - After-Hours
+    - Overnight
+    - Lunch-Time
+  Trend Core:
+    direction:
+    - Downtrend
+    - Sideways
+    - Undefined
+    - Uptrend
+    phase:
+    - End
+    - Reversal
+    - Deceleration
+    quality:
+    - Impulsive
+    - Volatile
+    - Choppy
+    strength:
+    - Very-Weak
+    - Weak
+    - Moderate
+  Volatility Core:
+    behaviour:
+    - Explosive
+    - Fading
+    - Oscillating
+    strength:
+    - High
+    - Very-High
+    - Extreme
+    - Very-Low
+    - Low
+  Volume Core:
+    behaviour:
+    - Climactic
+    strength:
+    - Very-High
+    - Very-Low
+    - Low
+    - High
+Micro Scalp:
+  Candles Core:
+    pattern:
+    - Inside-Bar
+    - Doji
+    - Spinning-Top
+    - Harami
+    - Pin-Bar
+    position:
+    - Mid-Range
+    - After-Trend
+    - At-Low
+    - At-Support
+    - At-Resistance
+    - At-High
+    - At-Breakout
+  Level Core:
+    extension: []
+    history:
+    - Untested
+    - Single-Hold
+    - Multiple-Hold
+    - Frequently-Broken
+    - Mixed-History
+    kind:
+    - Micro Support/Resistenza
+    - POC
+    - VWAP
+    - Opening Range
+    - Range Boundary
+    - Pivot Point
+    - Livello di Liquidità
+    orientation:
+    - Neutrale
+    - Anti-Trend
+    - Pro-Trend
+    strength:
+    - Weak
+    - Moderate
+    - Very-Weak
+    tf_class:
+    - M1
+    - M5
+  Momentum Core:
+    direction:
+    - Oscillating
+    - Neutral
+    phase:
+    - Deceleration
+    - Continuation
+    speed:
+    - Stagnant
+    - Slow
+    - Moderate
+    - Fast
+    strength:
+    - Low
+    - Minimal
+  Timing Core:
+    day_type:
+    - Regular
+    - Low-Volume
+    - Holiday-Adjacent
+    - Low-Impact-Events
+    - News-Heavy
+    - Central-Bank-Day
+    - Expiry-Day
+    - Earnings-Heavy
+    - Data-Release-Day
+    - High-Impact-Events
+    dow:
+    - Wednesday
+    - Tuesday
+    - Thursday
+    - Friday
+    - Monday
+    market_condition:
+    - Risk-Off
+    - Low-Volatility
+    - Consolidation
+    - Ranging
+    month_phase:
+    - Mid-Month
+    - Early-Month
+    - End-Month
+    - Quarter-End
+    - Month-End-Rebalancing
+    session_phase:
+    - Mid-Session
+    - Lunch-Time
+    - Early-Session
+    - Late-Session
+  Trend Core:
+    direction:
+    - Sideways
+    - Undefined
+    - Downtrend
+    - Uptrend
+    phase:
+    - Middle
+    - Deceleration
+    - Acceleration
+    - End
+    - Beginning
+    - Reversal
+    quality:
+    - Smooth
+    - Choppy
+    - Impulsive
+    - Clean
+    - Volatile
+    strength:
+    - Very-Weak
+    - Weak
+  Volatility Core:
+    behaviour:
+    - Stable
+    - Contracting
+    strength:
+    - Very-Low
+    - Low
+  Volume Core:
+    behaviour:
+    - Stable
+    strength:
+    - Very-Low
+    - Low
+    - Below-Average
+    - Average
+Momentum Ignition:
+  Candles Core:
+    pattern:
+    - Inside-Bar
+    - Doji
+    - Spinning-Top
+    - Marubozu
+    - Outside-Bar
+    - Engulfing
+    position:
+    - Mid-Range
+    - At-Breakout
+  Level Core:
+    extension: []
+    history:
+    - Untested
+    - Mixed-History
+    kind:
+    - VWAP
+    - POC
+    - Livello di Liquidità
+    - Range Boundary
+    - News Level
+    - Massimo/Minimo di Sessione
+    - Opening Range
+    - Livello di Gap
+    - Channel-Lines
+    - Volume Spike Zone
+    orientation:
+    - Pro-Trend
+    strength:
+    - Weak
+    - Very-Weak
+    - Moderate
+    tf_class:
+    - M1
+    - M5
+    - M15
+    - M30
+    - H1
+  Momentum Core:
+    direction:
+    - Neutral
+    - Oscillating
+    - Negative
+    - Positive
+    phase:
+    - Ignition
+    - Acceleration
+    - Reversal
+    speed:
+    - Fast
+    - Explosive
+    strength:
+    - Low
+    - Minimal
+    - Moderate
+    - High
+    - Extreme
+  Timing Core:
+    day_type:
+    - Central-Bank-Day
+    - News-Heavy
+    - Regular
+    - Data-Release-Day
+    - Earnings-Heavy
+    - Expiry-Day
+    - High-Impact-Events
+    - Low-Volume
+    - Holiday-Adjacent
+    - Low-Impact-Events
+    dow:
+    - Monday
+    - Tuesday
+    - Wednesday
+    market_condition:
+    - High-Volatility
+    - Risk-On
+    - Transition-Zone
+    - Breakout-Mode
+    - Trending
+    - Ranging
+    month_phase:
+    - Early-Month
+    - Mid-Month
+    session_phase:
+    - Opening
+    - Early-Session
+  Trend Core:
+    direction:
+    - Undefined
+    - Uptrend
+    - Downtrend
+    - Sideways
+    phase:
+    - Beginning
+    - Acceleration
+    quality:
+    - Impulsive
+    - Clean
+    - Volatile
+    strength:
+    - Very-Strong
+    - Weak
+    - Very-Weak
+    - Moderate
+    - Strong
+  Volatility Core:
+    behaviour:
+    - Contracting
+    - Stable
+    - Explosive
+    strength:
+    - Low
+    - Below-Average
+    - Very-Low
+  Volume Core:
+    behaviour:
+    - Increasing
+    strength:
+    - Very-High
+    - High
+News Spike:
+  Candles Core:
+    pattern:
+    - Outside-Bar
+    - Harami
+    - Marubozu
+    - Spinning-Top
+    - Inside-Bar
+    - Shooting-Star
+    - Hammer
+    - Pin-Bar
+    - Engulfing
+    - Doji
+    position:
+    - At-Breakout
+    - At-Low
+    - Mid-Range
+    - After-Trend
+    - At-High
+    - At-Resistance
+    - At-Support
+  Level Core:
+    extension: []
+    history:
+    - Untested
+    - Mixed-History
+    - Multiple-Hold
+    kind:
+    - Livello di Liquidità
+    - Range Boundary
+    - High/Low Precedente
+    - Volume Spike Zone
+    - News Level
+    - Massimo/Minimo di Sessione
+    - Opening Range
+    - Livello di Gap
+    orientation:
+    - Pro-Trend
+    - Anti-Trend
+    - Neutrale
+    strength:
+    - Weak
+    - Moderate
+    - Strong
+    - Very-Weak
+    - Very-Strong
+    tf_class:
+    - M1
+    - M5
+  Momentum Core:
+    direction:
+    - Positive
+    - Negative
+    - Neutral
+    - Oscillating
+    phase:
+    - Ignition
+    - Acceleration
+    - Continuation
+    - Reversal
+    - Deceleration
+    - Exhaustion
+    speed:
+    - Explosive
+    - Fast
+    strength:
+    - Extreme
+    - High
+    - Moderate
+    - Minimal
+    - Low
+  Timing Core:
+    day_type:
+    - Central-Bank-Day
+    - News-Heavy
+    - Expiry-Day
+    - Earnings-Heavy
+    - Data-Release-Day
+    - Holiday-Adjacent
+    - High-Impact-Events
+    dow:
+    - Monday
+    - Tuesday
+    - Wednesday
+    - Thursday
+    - Friday
+    market_condition:
+    - High-Volatility
+    - Low-Volatility
+    - Trending
+    - Consolidation
+    - Breakout-Mode
+    - Ranging
+    - Risk-On
+    - Risk-Off
+    - Transition-Zone
+    month_phase:
+    - Early-Month
+    - End-Month
+    - Mid-Month
+    - Quarter-End
+    - Month-End-Rebalancing
+    session_phase:
+    - Pre-Market
+    - Opening
+    - Early-Session
+    - Late-Session
+    - Lunch-Time
+    - Mid-Session
+    - Closing
+    - After-Hours
+    - Overnight
+  Trend Core:
+    direction:
+    - Uptrend
+    - Sideways
+    - Downtrend
+    - Undefined
+    phase:
+    - Deceleration
+    - End
+    - Reversal
+    - Middle
+    - Beginning
+    - Acceleration
+    quality:
+    - Impulsive
+    - Volatile
+    - Choppy
+    - Clean
+    - Smooth
+    strength:
+    - Very-Strong
+    - Strong
+    - Moderate
+    - Very-Weak
+    - Weak
+  Volatility Core:
+    behaviour:
+    - Explosive
+    - Oscillating
+    strength:
+    - Extreme
+    - Very-High
+  Volume Core:
+    behaviour:
+    - Climactic
+    - Volatile
+    strength:
+    - Average
+    - Below-Average
+    - Low
+    - Very-Low
+    - Very-High
+    - High
+    - Above-Average
+Opening Drive:
+  Candles Core:
+    pattern:
+    - Inside-Bar
+    - Pin-Bar
+    - Spinning-Top
+    - Marubozu
+    - Outside-Bar
+    - Engulfing
+    position:
+    - Mid-Range
+    - At-Breakout
+  Level Core:
+    extension: []
+    history:
+    - Untested
+    - Single-Hold
+    kind:
+    - High/Low Precedente
+    - Livello di Liquidità
+    - Range Boundary
+    - Volume Spike Zone
+    - News Level
+    - Massimo/Minimo di Sessione
+    - Opening Range
+    - Livello di Gap
+    - Micro Support/Resistenza
+    orientation:
+    - Pro-Trend
+    - Anti-Trend
+    strength:
+    - Moderate
+    - Strong
+    tf_class:
+    - M5
+    - M15
+    - M1
+  Momentum Core:
+    direction:
+    - Positive
+    - Negative
+    - Neutral
+    - Oscillating
+    phase:
+    - Ignition
+    - Acceleration
+    speed:
+    - Fast
+    - Explosive
+    strength:
+    - Extreme
+    - Moderate
+    - High
+  Timing Core:
+    day_type:
+    - Central-Bank-Day
+    - News-Heavy
+    - Data-Release-Day
+    - Earnings-Heavy
+    - Expiry-Day
+    - High-Impact-Events
+    - Regular
+    dow:
+    - Monday
+    - Tuesday
+    - Wednesday
+    - Thursday
+    - Friday
+    market_condition:
+    - Trending
+    - Transition-Zone
+    - Breakout-Mode
+    - Risk-Off
+    - Risk-On
+    - High-Volatility
+    - Ranging
+    month_phase:
+    - Early-Month
+    - Mid-Month
+    session_phase:
+    - Pre-Market
+    - Opening
+    - Early-Session
+  Trend Core:
+    direction:
+    - Uptrend
+    - Downtrend
+    - Undefined
+    phase:
+    - Beginning
+    - Acceleration
+    quality:
+    - Impulsive
+    - Volatile
+    - Clean
+    strength:
+    - Very-Weak
+    - Weak
+    - Moderate
+    - Strong
+    - Very-Strong
+  Volatility Core:
+    behaviour:
+    - Expanding
+    - Explosive
+    - Oscillating
+    strength:
+    - High
+    - Above-Average
+    - Normal
+    - Very-High
+  Volume Core:
+    behaviour:
+    - Increasing
+    - Climactic
+    strength:
+    - Very-High
+    - High
+    - Above-Average
+    - Average
+Overnight Pop:
+  Candles Core:
+    pattern:
+    - Outside-Bar
+    - Marubozu
+    - Pin-Bar
+    - Hammer
+    - Shooting-Star
+    - Engulfing
+    position:
+    - After-Trend
+    - Mid-Range
+  Level Core:
+    extension: []
+    history:
+    - Mixed-History
+    - Untested
+    kind:
+    - Livello di Gap
+    - VWAP
+    - Pivot Point
+    - Closing Level
+    - News Level
+    - High/Low Precedente
+    orientation:
+    - Anti-Trend
+    - Neutrale
+    strength:
+    - Moderate
+    - Weak
+    tf_class:
+    - M30
+    - H1
+    - H4
+    - D1
+  Momentum Core:
+    direction:
+    - Positive
+    - Negative
+    - Oscillating
+    phase:
+    - Continuation
+    - Deceleration
+    - Exhaustion
+    - Reversal
+    speed:
+    - Moderate
+    - Fast
+    - Slow
+    strength:
+    - Extreme
+    - High
+    - Moderate
+    - Low
+    - Minimal
+  Timing Core:
+    day_type:
+    - Regular
+    - News-Heavy
+    - Central-Bank-Day
+    - Expiry-Day
+    - Earnings-Heavy
+    - Data-Release-Day
+    - High-Impact-Events
+    dow:
+    - Monday
+    - Tuesday
+    - Wednesday
+    - Thursday
+    - Friday
+    market_condition:
+    - Risk-Off
+    - Risk-On
+    - High-Volatility
+    - Low-Volatility
+    month_phase:
+    - End-Month
+    - Quarter-End
+    - Mid-Month
+    - Early-Month
+    - Month-End-Rebalancing
+    session_phase:
+    - Overnight
+    - After-Hours
+    - Pre-Market
+  Trend Core:
+    direction:
+    - Uptrend
+    - Downtrend
+    - Sideways
+    - Undefined
+    phase:
+    - Reversal
+    - Beginning
+    - Deceleration
+    - End
+    - Acceleration
+    - Middle
+    quality:
+    - Impulsive
+    - Volatile
+    strength:
+    - Very-Weak
+    - Weak
+    - Moderate
+  Volatility Core:
+    behaviour:
+    - Explosive
+    - Oscillating
+    - Fading
+    strength:
+    - Above-Average
+    - Normal
+    - Below-Average
+  Volume Core:
+    behaviour:
+    - Decreasing
+    - Stable
+    strength:
+    - Very-Low
+    - Low
+    - Below-Average
+    - Average
+    - Above-Average
+    - High
+    - Very-High
+Range Scalper:
+  Candles Core:
+    pattern:
+    - Pin-Bar
+    - Doji
+    - Spinning-Top
+    - Inside-Bar
+    - Harami
+    position:
+    - At-Breakout
+    - At-Low
+    - At-Resistance
+    - At-Support
+    - Mid-Range
+    - At-High
+    - After-Trend
+  Level Core:
+    extension: []
+    history:
+    - Mixed-History
+    - Multiple-Hold
+    kind:
+    - Supporto/Resistenza Statica
+    - High/Low Precedente
+    - Pivot Point
+    - Banda di Bollinger
+    - Range Boundary
+    - Massimo/Minimo di Sessione
+    - Opening Range
+    - Channel-Lines
+    - Micro Support/Resistenza
+    orientation:
+    - Neutrale
+    - Anti-Trend
+    - Pro-Trend
+    strength:
+    - Moderate
+    - Strong
+    tf_class:
+    - M1
+    - M5
+    - M15
+  Momentum Core:
+    direction:
+    - Neutral
+    - Oscillating
+    phase:
+    - Exhaustion
+    - Deceleration
+    - Reversal
+    speed:
+    - Slow
+    - Stagnant
+    - Moderate
+    strength:
+    - Low
+    - Minimal
+    - Moderate
+  Timing Core:
+    day_type:
+    - Regular
+    - Low-Volume
+    - Holiday-Adjacent
+    - Low-Impact-Events
+    dow:
+    - Wednesday
+    - Tuesday
+    - Thursday
+    market_condition: []
+    month_phase:
+    - Mid-Month
+    session_phase:
+    - Overnight
+    - After-Hours
+    - Lunch-Time
+  Trend Core:
+    direction:
+    - Sideways
+    phase:
+    - Deceleration
+    - End
+    - Middle
+    quality:
+    - Choppy
+    - Clean
+    - Smooth
+    strength:
+    - Very-Weak
+    - Weak
+    - Moderate
+  Volatility Core:
+    behaviour:
+    - Contracting
+    - Stable
+    - Oscillating
+    strength:
+    - Low
+    - Very-Low
+    - Below-Average
+    - Normal
+  Volume Core:
+    behaviour:
+    - Stable
+    strength:
+    - Low
+    - Very-Low
+    - Below-Average
+    - Average
+Resistance Flip:
+  Candles Core:
+    pattern:
+    - Doji
+    - Shooting-Star
+    - Inside-Bar
+    - Pin-Bar
+    - Engulfing
+    - Spinning-Top
+    position:
+    - At-Resistance
+    - At-High
+  Level Core:
+    extension: []
+    history:
+    - Single-Hold
+    - Multiple-Hold
+    kind:
+    - Massimo/Minimo di Sessione
+    - Range Boundary
+    - Fibonacci Retracement
+    - POC
+    - Supporto/Resistenza Statica
+    - Micro Support/Resistenza
+    - Trendline
+    - Pivot Point
+    - Media Mobile Dinamica
+    - VWAP
+    - Channel-Lines
+    orientation:
+    - Anti-Trend
+    - Neutrale
+    strength:
+    - Strong
+    - Very-Strong
+    tf_class:
+    - M1
+    - M5
+    - M15
+    - H4
+    - H1
+    - M30
+    - D1
+    - W1
+    - MN1
+  Momentum Core:
+    direction:
+    - Neutral
+    - Oscillating
+    - Negative
+    phase:
+    - Continuation
+    - Deceleration
+    - Exhaustion
+    - Reversal
+    speed:
+    - Slow
+    - Moderate
+    - Stagnant
+    strength:
+    - Low
+    - Moderate
+    - High
+  Timing Core:
+    day_type:
+    - Regular
+    - Holiday-Adjacent
+    - Low-Volume
+    - Low-Impact-Events
+    dow:
+    - Wednesday
+    - Tuesday
+    - Thursday
+    - Friday
+    market_condition:
+    - Ranging
+    - Risk-Off
+    - Consolidation
+    - Risk-On
+    - Low-Volatility
+    month_phase:
+    - Mid-Month
+    - End-Month
+    session_phase:
+    - Mid-Session
+    - Early-Session
+    - Late-Session
+    - After-Hours
+    - Overnight
+  Trend Core:
+    direction:
+    - Downtrend
+    - Sideways
+    phase:
+    - Acceleration
+    - Middle
+    - Deceleration
+    quality:
+    - Clean
+    - Choppy
+    - Smooth
+    strength:
+    - Very-Strong
+    - Strong
+    - Moderate
+    - Weak
+  Volatility Core:
+    behaviour:
+    - Contracting
+    - Stable
+    - Fading
+    strength:
+    - Above-Average
+    - Normal
+  Volume Core:
+    behaviour:
+    - Increasing
+    - Climactic
+    strength:
+    - Below-Average
+    - Average
+    - Above-Average
+Reversal Swing:
+  Candles Core:
+    pattern:
+    - Marubozu
+    - Outside-Bar
+    - Engulfing
+    - Pin-Bar
+    - Hammer
+    - Shooting-Star
+    - Doji
+    - Spinning-Top
+    - Harami
+    position:
+    - At-High
+    - At-Low
+    - At-Resistance
+    - At-Support
+    - After-Trend
+  Level Core:
+    extension: []
+    history:
+    - Multiple-Hold
+    - Single-Hold
+    kind:
+    - Supporto/Resistenza Statica
+    - Fibonacci Retracement
+    - Pivot Point
+    - High/Low Precedente
+    - POC
+    - Channel-Lines
+    - Massimo/Minimo di Sessione
+    - Media Mobile Dinamica
+    - Livello di Liquidità
+    - Range Boundary
+    - Banda di Bollinger
+    - Trendline
+    orientation:
+    - Anti-Trend
+    strength:
+    - Very-Strong
+    - Strong
+    - Moderate
+    tf_class:
+    - M30
+    - H1
+    - H4
+    - D1
+    - W1
+  Momentum Core:
+    direction:
+    - Positive
+    - Negative
+    phase:
+    - Deceleration
+    - Exhaustion
+    - Reversal
+    speed:
+    - Fast
+    - Explosive
+    strength:
+    - Low
+    - Minimal
+  Timing Core:
+    day_type:
+    - Central-Bank-Day
+    - News-Heavy
+    - Data-Release-Day
+    - Earnings-Heavy
+    - Expiry-Day
+    - High-Impact-Events
+    dow:
+    - Thursday
+    - Friday
+    - Wednesday
+    market_condition:
+    - Breakout-Mode
+    - Consolidation
+    - High-Volatility
+    - Risk-On
+    - Transition-Zone
+    - Ranging
+    - Risk-Off
+    month_phase:
+    - End-Month
+    - Quarter-End
+    - Month-End-Rebalancing
+    - Mid-Month
+    session_phase:
+    - Mid-Session
+    - Late-Session
+    - Closing
+    - Overnight
+    - Early-Session
+  Trend Core:
+    direction:
+    - Uptrend
+    - Downtrend
+    phase:
+    - End
+    - Reversal
+    - Deceleration
+    quality:
+    - Choppy
+    - Volatile
+    - Impulsive
+    strength:
+    - Very-Weak
+    - Weak
+  Volatility Core:
+    behaviour:
+    - Explosive
+    - Fading
+    - Expanding
+    strength:
+    - High
+    - Very-High
+    - Extreme
+  Volume Core:
+    behaviour:
+    - Climactic
+    strength:
+    - High
+    - Very-High
+Session Range Break:
+  Candles Core:
+    pattern:
+    - Doji
+    - Spinning-Top
+    - Outside-Bar
+    - Marubozu
+    - Engulfing
+    - Inside-Bar
+    position:
+    - At-Breakout
+    - At-Low
+    - At-High
+    - At-Support
+    - At-Resistance
+  Level Core:
+    extension: []
+    history:
+    - Single-Hold
+    - Multiple-Hold
+    kind:
+    - High/Low Precedente
+    - Livello di Liquidità
+    - Range Boundary
+    - Massimo/Minimo di Sessione
+    - Opening Range
+    - Channel-Lines
+    orientation:
+    - Pro-Trend
+    strength:
+    - Strong
+    - Very-Strong
+    tf_class:
+    - M15
+    - M30
+    - H1
+    - H4
+    - D1
+  Momentum Core:
+    direction:
+    - Positive
+    - Negative
+    phase:
+    - Ignition
+    - Acceleration
+    speed:
+    - Moderate
+    - Fast
+    - Explosive
+    strength:
+    - Moderate
+    - High
+  Timing Core:
+    day_type:
+    - Regular
+    - News-Heavy
+    - Central-Bank-Day
+    - Expiry-Day
+    - Earnings-Heavy
+    - Data-Release-Day
+    - High-Impact-Events
+    dow:
+    - Tuesday
+    - Wednesday
+    - Thursday
+    market_condition:
+    - Consolidation
+    - Ranging
+    - Breakout-Mode
+    - High-Volatility
+    - Low-Volatility
+    - Trending
+    - Risk-On
+    month_phase:
+    - Early-Month
+    - Mid-Month
+    - Quarter-End
+    - Month-End-Rebalancing
+    session_phase:
+    - Opening
+    - Early-Session
+    - Pre-Market
+  Trend Core:
+    direction:
+    - Undefined
+    - Downtrend
+    - Uptrend
+    phase:
+    - Beginning
+    - Acceleration
+    - Middle
+    quality:
+    - Clean
+    - Smooth
+    - Impulsive
+    strength:
+    - Moderate
+    - Very-Strong
+    - Strong
+    - Very-Weak
+    - Weak
+  Volatility Core:
+    behaviour:
+    - Expanding
+    - Explosive
+    - Contracting
+    strength:
+    - Above-Average
+    - High
+    - Very-High
+    - Normal
+  Volume Core:
+    behaviour:
+    - Increasing
+    strength:
+    - Above-Average
+    - High
+    - Very-High
+Support Bounce:
+  Candles Core:
+    pattern:
+    - Pin-Bar
+    - Hammer
+    - Doji
+    - Engulfing
+    - Inside-Bar
+    - Spinning-Top
+    position:
+    - At-Support
+    - At-Low
+  Level Core:
+    extension: []
+    history:
+    - Single-Hold
+    - Multiple-Hold
+    kind:
+    - Supporto/Resistenza Statica
+    - Media Mobile Dinamica
+    - VWAP
+    - POC
+    - Fibonacci Retracement
+    - Pivot Point
+    - Range Boundary
+    - Massimo/Minimo di Sessione
+    - Trendline
+    - Channel-Lines
+    - Micro Support/Resistenza
+    orientation:
+    - Neutrale
+    - Anti-Trend
+    strength:
+    - Strong
+    - Very-Strong
+    tf_class:
+    - M1
+    - M5
+    - M15
+    - H4
+    - H1
+    - M30
+    - D1
+    - W1
+    - MN1
+  Momentum Core:
+    direction:
+    - Neutral
+    - Oscillating
+    - Positive
+    phase:
+    - Deceleration
+    - Exhaustion
+    - Continuation
+    - Reversal
+    speed:
+    - Moderate
+    - Slow
+    - Stagnant
+    strength:
+    - Low
+    - Moderate
+  Timing Core:
+    day_type:
+    - Regular
+    - Low-Volume
+    - Low-Impact-Events
+    - Holiday-Adjacent
+    dow:
+    - Tuesday
+    - Wednesday
+    - Thursday
+    - Friday
+    market_condition:
+    - Ranging
+    - Consolidation
+    - Risk-Off
+    - Low-Volatility
+    month_phase:
+    - Mid-Month
+    - End-Month
+    session_phase:
+    - Early-Session
+    - Mid-Session
+    - Late-Session
+    - After-Hours
+    - Overnight
+  Trend Core:
+    direction:
+    - Uptrend
+    - Sideways
+    phase:
+    - Middle
+    - Acceleration
+    - Deceleration
+    quality:
+    - Clean
+    - Smooth
+    - Choppy
+    strength:
+    - Moderate
+    - Weak
+    - Strong
+    - Very-Strong
+  Volatility Core:
+    behaviour:
+    - Stable
+    - Fading
+    - Contracting
+    strength:
+    - Above-Average
+    - Normal
+  Volume Core:
+    behaviour:
+    - Stable
+    - Increasing
+    strength:
+    - Average
+    - Above-Average
+    - Below-Average
+Trend Follower:
+  Candles Core:
+    pattern:
+    - Pin-Bar
+    - Inside-Bar
+    - Hammer
+    - Shooting-Star
+    - Marubozu
+    - Engulfing
+    position:
+    - Mid-Range
+    - After-Trend
+    - At-High
+    - At-Low
+  Level Core:
+    extension: []
+    history:
+    - Single-Hold
+    - Multiple-Hold
+    kind:
+    - Livello di Gap
+    - Trendline
+    - Channel-Lines
+    - Supporto/Resistenza Statica
+    - Media Mobile Dinamica
+    - Banda di Bollinger
+    - VWAP
+    - Fibonacci Retracement
+    - POC
+    orientation:
+    - Pro-Trend
+    strength:
+    - Strong
+    - Very-Strong
+    - Moderate
+    tf_class:
+    - M1
+    - M30
+    - D1
+    - W1
+    - MN1
+    - H4
+    - H1
+    - M15
+    - M5
+  Momentum Core:
+    direction:
+    - Positive
+    - Negative
+    phase:
+    - Acceleration
+    - Continuation
+    - Ignition
+    speed:
+    - Moderate
+    - Slow
+    - Fast
+    - Explosive
+    strength:
+    - High
+    - Extreme
+    - Moderate
+  Timing Core:
+    day_type:
+    - Regular
+    - Low-Impact-Events
+    dow:
+    - Tuesday
+    - Wednesday
+    - Thursday
+    - Monday
+    market_condition:
+    - Trending
+    - Low-Volatility
+    - Risk-Off
+    month_phase:
+    - Early-Month
+    - Mid-Month
+    session_phase:
+    - Early-Session
+    - Mid-Session
+    - Late-Session
+    - Closing
+  Trend Core:
+    direction:
+    - Uptrend
+    - Downtrend
+    phase:
+    - Acceleration
+    - Middle
+    - Beginning
+    quality:
+    - Clean
+    - Smooth
+    strength:
+    - Moderate
+    - Strong
+    - Very-Strong
+  Volatility Core:
+    behaviour:
+    - Stable
+    - Expanding
+    - Contracting
+    strength:
+    - Normal
+    - Above-Average
+  Volume Core:
+    behaviour:
+    - Stable
+    - Increasing
+    strength:
+    - Above-Average
+    - High
+    - Average
+    - Very-High
+Volatility Breakout:
+  Candles Core:
+    pattern:
+    - Inside-Bar
+    - Doji
+    - Spinning-Top
+    - Harami
+    - Outside-Bar
+    - Marubozu
+    position:
+    - At-Breakout
+    - Mid-Range
+    - At-Support
+    - At-Resistance
+  Level Core:
+    extension: []
+    history:
+    - Mixed-History
+    - Frequently-Broken
+    - Untested
+    - Single-Hold
+    - Multiple-Hold
+    kind:
+    - High/Low Precedente
+    - Banda di Bollinger
+    - Range Boundary
+    - Volume Spike Zone
+    - News Level
+    - Massimo/Minimo di Sessione
+    - Opening Range
+    - Channel-Lines
+    orientation:
+    - Pro-Trend
+    - Neutrale
+    strength:
+    - Weak
+    - Moderate
+    - Strong
+    tf_class:
+    - M15
+    - M1
+    - M5
+    - M30
+    - H1
+    - H4
+  Momentum Core:
+    direction:
+    - Oscillating
+    - Neutral
+    phase:
+    - Ignition
+    - Reversal
+    - Acceleration
+    speed:
+    - Explosive
+    - Fast
+    strength:
+    - Low
+    - Minimal
+    - Moderate
+  Timing Core:
+    day_type:
+    - Central-Bank-Day
+    - News-Heavy
+    - Earnings-Heavy
+    - Data-Release-Day
+    - Expiry-Day
+    - High-Impact-Events
+    - Regular
+    dow:
+    - Monday
+    - Tuesday
+    - Thursday
+    - Friday
+    - Wednesday
+    market_condition:
+    - High-Volatility
+    - Low-Volatility
+    - Consolidation
+    - Ranging
+    - Risk-On
+    month_phase:
+    - Early-Month
+    - Mid-Month
+    - Month-End-Rebalancing
+    - Quarter-End
+    session_phase:
+    - Opening
+    - Early-Session
+    - Pre-Market
+    - Mid-Session
+  Trend Core:
+    direction:
+    - Sideways
+    - Undefined
+    phase:
+    - Beginning
+    - Acceleration
+    quality:
+    - Impulsive
+    - Volatile
+    - Choppy
+    - Smooth
+    - Clean
+    strength:
+    - Weak
+    - Very-Weak
+  Volatility Core:
+    behaviour:
+    - Explosive
+    - Contracting
+    strength:
+    - Low
+    - Very-Low
+    - Below-Average
+  Volume Core:
+    behaviour:
+    - Increasing
+    - Climactic
+    strength:
+    - Very-High
+    - High
+Volatility Fade:
+  Candles Core:
+    pattern:
+    - Outside-Bar
+    - Marubozu
+    - Pin-Bar
+    - Shooting-Star
+    - Hammer
+    - Harami
+    position:
+    - At-Low
+    - At-High
+    - After-Trend
+  Level Core:
+    extension: []
+    history:
+    - Mixed-History
+    - Frequently-Broken
+    - Untested
+    kind:
+    - VWAP
+    - Banda di Bollinger
+    - Range Boundary
+    - Volume Spike Zone
+    - News Level
+    - Massimo/Minimo di Sessione
+    - Livello di Gap
+    - Micro Support/Resistenza
+    - High/Low Precedente
+    orientation:
+    - Anti-Trend
+    strength:
+    - Very-Strong
+    - Strong
+    tf_class:
+    - M1
+    - M5
+    - M15
+  Momentum Core:
+    direction:
+    - Neutral
+    - Oscillating
+    phase:
+    - Reversal
+    - Exhaustion
+    - Deceleration
+    speed:
+    - Explosive
+    - Fast
+    strength:
+    - Extreme
+    - High
+  Timing Core:
+    day_type:
+    - News-Heavy
+    - High-Impact-Events
+    - Low-Volume
+    - Holiday-Adjacent
+    - Data-Release-Day
+    - Earnings-Heavy
+    - Expiry-Day
+    - Central-Bank-Day
+    - Regular
+    dow:
+    - Wednesday
+    - Friday
+    - Tuesday
+    - Thursday
+    market_condition:
+    - High-Volatility
+    - Risk-On
+    - Transition-Zone
+    - Ranging
+    month_phase:
+    - Month-End-Rebalancing
+    - End-Month
+    - Quarter-End
+    session_phase:
+    - Opening
+    - Closing
+    - Late-Session
+    - Overnight
+    - After-Hours
+    - Lunch-Time
+  Trend Core:
+    direction:
+    - Uptrend
+    - Downtrend
+    - Undefined
+    phase:
+    - Deceleration
+    - Middle
+    - End
+    - Reversal
+    quality:
+    - Volatile
+    - Impulsive
+    - Choppy
+    - Clean
+    - Smooth
+    strength:
+    - Moderate
+    - Strong
+    - Weak
+  Volatility Core:
+    behaviour:
+    - Explosive
+    - Fading
+    strength:
+    - Extreme
+    - Very-High
+  Volume Core:
+    behaviour:
+    - Climactic
+    strength:
+    - Very-High
