@@ -1,0 +1,1108 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Matrice Punteggi Trading</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: #333;
+        }
+        
+        .container {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            backdrop-filter: blur(10px);
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        h1 {
+            text-align: center;
+            color: #2c3e50;
+            margin-bottom: 30px;
+            font-size: 2.2em;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+        }
+        
+        .legend {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+        
+        .legend-section {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 10px;
+            border-left: 4px solid #95a5a6;
+        }
+        
+        .legend h3 {
+            margin-top: 0;
+            color: #2c3e50;
+        }
+        
+        .legend ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+        
+        .legend li {
+            padding: 4px 0;
+            font-size: 0.9em;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            background: white;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+        }
+        
+        th, td {
+            padding: 15px 10px;
+            text-align: center;
+            border: 1px solid #e0e0e0;
+            font-weight: 500;
+        }
+        
+        th {
+            background: linear-gradient(135deg, #95a5a6, #7f8c8d);
+            color: white;
+            font-weight: 600;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.2);
+        }
+        
+        .row-header {
+            background: linear-gradient(135deg, #95a5a6, #7f8c8d) !important;
+            color: white !important;
+            font-weight: 600;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.2);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+        
+        .row-header:hover {
+            background: linear-gradient(135deg, #7f8c8d, #6c7b7d) !important;
+            transform: scale(1.02);
+        }
+        
+        .row-header::after {
+            content: ' ▼';
+            font-size: 0.8em;
+            opacity: 0.7;
+            transition: transform 0.3s ease;
+        }
+        
+        .row-header.expanded::after {
+            transform: rotate(180deg);
+        }
+        
+        .subclass-row {
+            display: none;
+            background: rgba(149, 165, 166, 0.1);
+        }
+        
+        .subclass-row.visible {
+            display: table-row;
+        }
+        
+        .subclass-header {
+            background: linear-gradient(135deg, #bdc3c7, #95a5a6) !important;
+            color: white !important;
+            font-weight: 500;
+            font-size: 0.9em;
+            padding-left: 25px;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.2);
+        }
+        
+        .clickable-analysis {
+            cursor: pointer !important;
+            transition: all 0.2s ease;
+        }
+        
+        .clickable-analysis:hover {
+            background: linear-gradient(135deg, #a8b4b6, #8fa1a3) !important;
+        }
+        
+        td.score {
+            font-weight: bold;
+            font-size: 1.1em;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            position: relative;
+        }
+        
+        td.score:hover {
+            transform: scale(1.05);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+            z-index: 999;
+        }
+        
+        .score-details {
+            display: none;
+            position: absolute;
+            top: -60px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(255, 255, 255, 0.98);
+            border-radius: 8px;
+            padding: 10px;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.4);
+            z-index: 9999;
+            min-width: 90px;
+            text-align: center;
+            border: 2px solid #333;
+            pointer-events: none;
+            white-space: nowrap;
+        }
+        
+        td.score.subclass-cell:hover {
+            z-index: 1000;
+        }
+        
+        td.score.subclass-cell:hover .score-details {
+            display: block;
+            z-index: 9999;
+        }
+        
+        .param-tp { color: #27ae60; font-weight: bold; }
+        .param-sl { color: #e74c3c; font-weight: bold; }
+        .param-rr { color: #3498db; font-weight: bold; }
+        
+        .param-line {
+            margin: 2px 0;
+            font-size: 0.9em;
+        }
+        
+        /* Popup Analysis Styles */
+        .analysis-popup {
+            position: absolute;
+            background: rgba(255, 255, 255, 0.98);
+            border: 2px solid #95a5a6;
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.2);
+            backdrop-filter: blur(10px);
+            z-index: 10000;
+            max-width: 450px;
+            min-width: 400px;
+            max-height: 80vh;
+            overflow-y: auto;
+            font-size: 0.9em;
+            line-height: 1.4;
+            display: none;
+            animation: popupFadeIn 0.3s ease-out;
+        }
+        
+        @keyframes popupFadeIn {
+            from {
+                opacity: 0;
+                transform: scale(0.9) translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1) translateY(0);
+            }
+        }
+        
+        .analysis-popup.closing {
+            animation: popupFadeOut 0.2s ease-in forwards;
+        }
+        
+        @keyframes popupFadeOut {
+            from {
+                opacity: 1;
+                transform: scale(1) translateY(0);
+            }
+            to {
+                opacity: 0;
+                transform: scale(0.9) translateY(-10px);
+            }
+        }
+        
+        .analysis-popup h3 {
+            margin: 0 0 15px 0;
+            color: #2c3e50;
+            font-size: 1.1em;
+            border-bottom: 2px solid #95a5a6;
+            padding-bottom: 8px;
+        }
+        
+        .analysis-popup h4 {
+            margin: 10px 0 5px 0;
+            color: #34495e;
+            font-size: 1em;
+            cursor: pointer;
+            padding: 8px 12px;
+            border-radius: 6px;
+            background: linear-gradient(135deg, #ecf0f1, #d5dbdb);
+            transition: all 0.2s ease;
+            user-select: none;
+            position: relative;
+        }
+        
+        .analysis-popup h4:hover {
+            background: linear-gradient(135deg, #d5dbdb, #bdc3c7);
+            transform: translateX(2px);
+        }
+        
+        .analysis-popup h4::after {
+            content: '▼';
+            position: absolute;
+            right: 12px;
+            font-size: 0.8em;
+            transition: transform 0.2s ease;
+        }
+        
+        .analysis-popup h4.collapsed::after {
+            transform: rotate(-90deg);
+        }
+        
+        .analysis-popup ul {
+            margin: 5px 0 8px 15px;
+            padding: 0;
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease, opacity 0.2s ease;
+            opacity: 0;
+        }
+        
+        .analysis-popup ul.expanded {
+            max-height: 500px;
+            opacity: 1;
+        }
+        
+        .analysis-popup li {
+            margin: 4px 0;
+            font-size: 0.85em;
+        }
+        
+        .analysis-popup strong {
+            color: #2c3e50;
+        }
+        
+        .analysis-section {
+            margin-bottom: 8px;
+        }
+        
+        .popup-close-btn {
+            position: absolute;
+            top: 8px;
+            right: 12px;
+            background: none;
+            border: none;
+            font-size: 1.2em;
+            cursor: pointer;
+            color: #95a5a6;
+            transition: color 0.2s ease;
+        }
+        
+        .popup-close-btn:hover {
+            color: #e74c3c;
+        }
+        
+        /* Active cell styling */
+        .subclass-header.active-analysis {
+            background: linear-gradient(135deg, #e74c3c, #c0392b) !important;
+            transform: scale(1.02);
+            box-shadow: 0 0 15px rgba(231, 76, 60, 0.4);
+        }
+        
+        /* Gradient colors based on score ranges */
+        .score-very-high { background: linear-gradient(135deg, #e74c3c, #c0392b); color: white; }
+        .score-high { background: linear-gradient(135deg, #f39c12, #e67e22); color: white; }
+        .score-medium { background: linear-gradient(135deg, #f1c40f, #f39c12); color: white; }
+        .score-low { background: linear-gradient(135deg, #27ae60, #2ecc71); color: white; }
+        .score-very-low { background: linear-gradient(135deg, #3498db, #2980b9); color: white; }
+        
+        .formula {
+            background: #ecf0f1;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 20px 0;
+            font-family: 'Courier New', monospace;
+            text-align: center;
+            border-left: 4px solid #95a5a6;
+        }
+        
+        @media (max-width: 768px) {
+            .container { padding: 15px; }
+            .legend { grid-template-columns: 1fr; }
+            th, td { padding: 8px 4px; font-size: 0.8em; }
+            h1 { font-size: 1.6em; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🎯 Matrice Punteggi Trading</h1>
+        
+        <div class="legend">
+            <div class="legend-section">
+                <h3>📊 Parametri Contestuali (Sessioni)</h3>
+                <ul>
+                    <li><strong>SYDNEY:</strong> 2 punti - Volumi bassi</li>
+                    <li><strong>SYD-TO:</strong> 8 punti - Overlap Oceania-Asia</li>
+                    <li><strong>TOKYO:</strong> 12 punti - Hub asiatico</li>
+                    <li><strong>TO-LO:</strong> 18 punti - Overlap Asia-Europa</li>
+                    <li><strong>LONDON:</strong> 15 punti - Apertura europea</li>
+                    <li><strong>LO-NY:</strong> 25 punti - Massima liquidità</li>
+                    <li><strong>NEWYORK:</strong> 22 punti - Sessione USA</li>
+                    <li><strong>NY-SY:</strong> 5 punti - Overlap limitato</li>
+                </ul>
+            </div>
+            
+            <div class="legend-section">
+                <h3>⚡ Tipologie Operazioni</h3>
+                <ul>
+                    <li><strong>INIZIO:</strong> x1.0 - Alto margine</li>
+                    <li><strong>CONTINUAZIONE:</strong> x0.8 - Buon margine</li>
+                    <li><strong>PIVOT:</strong> x0.6 - Rischio/rendimento variabile</li>
+                    <li><strong>ACCUMULO:</strong> x0.4 - Lungo termine</li>
+                    <li><strong>ESAURIMENTO:</strong> x0.3 - Margini ridotti</li>
+                </ul>
+            </div>
+        </div>
+        
+        <div class="formula">
+            <strong>Formula:</strong> Punteggio = (Valore Sessione × Moltiplicatore Tipologia) | Minimo: 1 punto
+        </div>
+        
+        <table id="tradingMatrix">
+            <thead>
+                <tr>
+                    <th>TIPOLOGIA / SESSIONE</th>
+                    <th>SYDNEY</th>
+                    <th>SYD-TO</th>
+                    <th>TOKYO</th>
+                    <th>TO-LO</th>
+                    <th>LONDON</th>
+                    <th>LO-NY</th>
+                    <th>NEWYORK</th>
+                    <th>NY-SY</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td class="row-header" data-type="inizio">INIZIO</td>
+                    <td class="score">2</td>
+                    <td class="score">8</td>
+                    <td class="score">12</td>
+                    <td class="score">18</td>
+                    <td class="score">15</td>
+                    <td class="score">25</td>
+                    <td class="score">22</td>
+                    <td class="score">5</td>
+                </tr>
+                <tr class="subclass-row" data-parent="inizio">
+                    <td class="subclass-header clickable-analysis" data-analysis="impulso">→ Impulso</td>
+                    <td class="score">2</td>
+                    <td class="score">10</td>
+                    <td class="score">14</td>
+                    <td class="score">22</td>
+                    <td class="score">18</td>
+                    <td class="score">30</td>
+                    <td class="score">26</td>
+                    <td class="score">6</td>
+                </tr>
+                <tr class="subclass-row" data-parent="inizio">
+                    <td class="subclass-header clickable-analysis" data-analysis="gap">→ Gap Opening</td>
+                    <td class="score">2</td>
+                    <td class="score">8</td>
+                    <td class="score">12</td>
+                    <td class="score">18</td>
+                    <td class="score">15</td>
+                    <td class="score">25</td>
+                    <td class="score">22</td>
+                    <td class="score">5</td>
+                </tr>
+                <tr class="subclass-row" data-parent="inizio">
+                    <td class="subclass-header clickable-analysis" data-analysis="distribuzione">→ Distribuzione</td>
+                    <td class="score">2</td>
+                    <td class="score">6</td>
+                    <td class="score">10</td>
+                    <td class="score">14</td>
+                    <td class="score">12</td>
+                    <td class="score">20</td>
+                    <td class="score">18</td>
+                    <td class="score">4</td>
+                </tr>
+                <tr>
+                    <td class="row-header" data-type="continuazione">CONTINUAZIONE</td>
+                    <td class="score">2</td>
+                    <td class="score">6</td>
+                    <td class="score">10</td>
+                    <td class="score">14</td>
+                    <td class="score">12</td>
+                    <td class="score">20</td>
+                    <td class="score">18</td>
+                    <td class="score">4</td>
+                </tr>
+                <tr class="subclass-row" data-parent="continuazione">
+                    <td class="subclass-header clickable-analysis" data-analysis="momentum">→ Momentum</td>
+                    <td class="score">2</td>
+                    <td class="score">8</td>
+                    <td class="score">12</td>
+                    <td class="score">17</td>
+                    <td class="score">14</td>
+                    <td class="score">24</td>
+                    <td class="score">21</td>
+                    <td class="score">5</td>
+                </tr>
+                <tr class="subclass-row" data-parent="continuazione">
+                    <td class="subclass-header clickable-analysis" data-analysis="flash">→ Flash</td>
+                    <td class="score">1</td>
+                    <td class="score">5</td>
+                    <td class="score">8</td>
+                    <td class="score">12</td>
+                    <td class="score">10</td>
+                    <td class="score">16</td>
+                    <td class="score">14</td>
+                    <td class="score">3</td>
+                </tr>
+                <tr class="subclass-row" data-parent="continuazione">
+                    <td class="subclass-header clickable-analysis" data-analysis="pullback">→ Pullback</td>
+                    <td class="score">2</td>
+                    <td class="score">6</td>
+                    <td class="score">10</td>
+                    <td class="score">14</td>
+                    <td class="score">12</td>
+                    <td class="score">20</td>
+                    <td class="score">18</td>
+                    <td class="score">4</td>
+                </tr>
+                <tr>
+                    <td class="row-header" data-type="pivot">PIVOT</td>
+                    <td class="score">1</td>
+                    <td class="score">5</td>
+                    <td class="score">7</td>
+                    <td class="score">11</td>
+                    <td class="score">9</td>
+                    <td class="score">15</td>
+                    <td class="score">13</td>
+                    <td class="score">3</td>
+                </tr>
+                <tr class="subclass-row" data-parent="pivot">
+                    <td class="subclass-header clickable-analysis" data-analysis="breakout">→ Breakout</td>
+                    <td class="score">1</td>
+                    <td class="score">6</td>
+                    <td class="score">9</td>
+                    <td class="score">14</td>
+                    <td class="score">12</td>
+                    <td class="score">20</td>
+                    <td class="score">17</td>
+                    <td class="score">4</td>
+                </tr>
+                <tr class="subclass-row" data-parent="pivot">
+                    <td class="subclass-header clickable-analysis" data-analysis="false-breakout">→ False Breakout</td>
+                    <td class="score">1</td>
+                    <td class="score">5</td>
+                    <td class="score">8</td>
+                    <td class="score">12</td>
+                    <td class="score">10</td>
+                    <td class="score">17</td>
+                    <td class="score">14</td>
+                    <td class="score">4</td>
+                </tr>
+                <tr class="subclass-row" data-parent="pivot">
+                    <td class="subclass-header clickable-analysis" data-analysis="rimbalzo">→ Rimbalzo</td>
+                    <td class="score">1</td>
+                    <td class="score">5</td>
+                    <td class="score">7</td>
+                    <td class="score">11</td>
+                    <td class="score">9</td>
+                    <td class="score">15</td>
+                    <td class="score">13</td>
+                    <td class="score">3</td>
+                </tr>
+                <tr>
+                    <td class="row-header" data-type="accumulo">ACCUMULO</td>
+                    <td class="score">1</td>
+                    <td class="score">3</td>
+                    <td class="score">5</td>
+                    <td class="score">7</td>
+                    <td class="score">6</td>
+                    <td class="score">10</td>
+                    <td class="score">9</td>
+                    <td class="score">2</td>
+                </tr>
+                <tr class="subclass-row" data-parent="accumulo">
+                    <td class="subclass-header clickable-analysis" data-analysis="swing-accumulo">→ Swing Accumulo</td>
+                    <td class="score">1</td>
+                    <td class="score">4</td>
+                    <td class="score">6</td>
+                    <td class="score">9</td>
+                    <td class="score">7</td>
+                    <td class="score">12</td>
+                    <td class="score">11</td>
+                    <td class="score">2</td>
+                </tr>
+                <tr class="subclass-row" data-parent="accumulo">
+                    <td class="subclass-header clickable-analysis" data-analysis="value-averaging">→ Value Averaging</td>
+                    <td class="score">1</td>
+                    <td class="score">3</td>
+                    <td class="score">5</td>
+                    <td class="score">7</td>
+                    <td class="score">6</td>
+                    <td class="score">10</td>
+                    <td class="score">9</td>
+                    <td class="score">2</td>
+                </tr>
+                <tr class="subclass-row" data-parent="accumulo">
+                    <td class="subclass-header clickable-analysis" data-analysis="dca">→ DCA</td>
+                    <td class="score">1</td>
+                    <td class="score">3</td>
+                    <td class="score">4</td>
+                    <td class="score">6</td>
+                    <td class="score">5</td>
+                    <td class="score">9</td>
+                    <td class="score">8</td>
+                    <td class="score">2</td>
+                </tr>
+                <tr>
+                    <td class="row-header" data-type="esaurimento">ESAURIMENTO</td>
+                    <td class="score">1</td>
+                    <td class="score">2</td>
+                    <td class="score">4</td>
+                    <td class="score">5</td>
+                    <td class="score">5</td>
+                    <td class="score">8</td>
+                    <td class="score">7</td>
+                    <td class="score">2</td>
+                </tr>
+                <tr class="subclass-row" data-parent="esaurimento">
+                    <td class="subclass-header clickable-analysis" data-analysis="climax">→ Climax</td>
+                    <td class="score">1</td>
+                    <td class="score">3</td>
+                    <td class="score">5</td>
+                    <td class="score">7</td>
+                    <td class="score">6</td>
+                    <td class="score">10</td>
+                    <td class="score">9</td>
+                    <td class="score">2</td>
+                </tr>
+                <tr class="subclass-row" data-parent="esaurimento">
+                    <td class="subclass-header clickable-analysis" data-analysis="divergenza">→ Divergenza</td>
+                    <td class="score">1</td>
+                    <td class="score">2</td>
+                    <td class="score">4</td>
+                    <td class="score">5</td>
+                    <td class="score">5</td>
+                    <td class="score">8</td>
+                    <td class="score">7</td>
+                    <td class="score">2</td>
+                </tr>
+                <tr class="subclass-row" data-parent="esaurimento">
+                    <td class="subclass-header clickable-analysis" data-analysis="consolidamento">→ Consolidamento</td>
+                    <td class="score">1</td>
+                    <td class="score">2</td>
+                    <td class="score">3</td>
+                    <td class="score">4</td>
+                    <td class="score">4</td>
+                    <td class="score">6</td>
+                    <td class="score">6</td>
+                    <td class="score">1</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <script>
+        const subclassParams = {
+            'inizio-impulso': { tp: 10, sl: 2, vol: 1.2 },
+            'inizio-gap': { tp: 8, sl: 5, vol: 1.0 },
+            'inizio-distribuzione': { tp: 9, sl: 7, vol: 0.8 },
+            'continuazione-momentum': { tp: 11, sl: 6, vol: 1.2 },
+            'continuazione-flash': { tp: 7, sl: 3, vol: 0.8 },
+            'continuazione-pullback': { tp: 9, sl: 5, vol: 1.0 },
+            'pivot-breakout': { tp: 6, sl: 3, vol: 1.3 },
+            'pivot-false': { tp: 5, sl: 3, vol: 1.1 },
+            'pivot-rimbalzo': { tp: 8, sl: 6, vol: 1.0 },
+            'accumulo-swing': { tp: 12, sl: 7, vol: 1.2 },
+            'accumulo-value': { tp: 18, sl: 10, vol: 1.0 },
+            'accumulo-dca': { tp: 24, sl: 12, vol: 0.9 },
+            'esaurimento-climax': { tp: 4, sl: 3, vol: 1.3 },
+            'esaurimento-divergenza': { tp: 7, sl: 4, vol: 1.0 },
+            'esaurimento-consolidamento': { tp: 5, sl: 5, vol: 0.8 }
+        };
+
+        const analysisData = {
+            'impulso': {
+                title: '🚀 IMPULSO [P=0.4, x1.2, TP=10, SL=2]',
+                sections: {
+                    'ideal': {
+                        title: '📈 QUANDO È IDEALE USARLA:',
+                        items: [
+                            'News release importanti (NFP, Fed, ECB)',
+                            'Aperture sessioni con gap significativi',
+                            'Breakout da consolidamenti lunghi',
+                            'Catalyst events chiari e definiti',
+                            'Mercati ad alta liquidità (overlap NY-London)',
+                            'Timeframe M1-M5 per execution rapida'
+                        ]
+                    },
+                    'strengths': {
+                        title: '💪 PUNTI FORTI:',
+                        items: [
+                            '<strong>Ratio eccezionale</strong> (5:1) - massima efficienza capitale',
+                            '<strong>Velocità estrema</strong> - profitti in pochi minuti',
+                            '<strong>Movimento pulito</strong> - senza "rumore" di mercato',
+                            '<strong>Catalizzatore chiaro</strong> - facile identificazione setup'
+                        ]
+                    },
+                    'combinations': {
+                        title: '🔧 COMBINAZIONI NATURALI:',
+                        items: [
+                            '<strong>Momentum</strong> → entrambi puntano su accelerazione',
+                            '<strong>Breakout</strong> → entrambi sfruttano rotture di livelli',
+                            '<strong>Gap Opening</strong> → entrambi operano su movimenti "freschi"',
+                            '<strong>Flash</strong> → entrambi sono operazioni ad alta velocità'
+                        ]
+                    },
+                    'avoid': {
+                        title: '⚠️ QUANDO È SCONSIGLIATO:',
+                        items: [
+                            'Mercati laterali senza catalyst',
+                            'Bassa volatilità (agosto, fine anno)',
+                            'Livelli di resistenza forti nelle vicinanze',
+                            'Orari di bassa liquidità (gap tra sessioni)',
+                            'Dopo grandi movimenti già avvenuti'
+                        ]
+                    },
+                    'weaknesses': {
+                        title: '❌ PUNTI DEBOLI:',
+                        items: [
+                            '<strong>Stop loss serratissimo</strong> (SL=2) - facile triggerare',
+                            '<strong>Timing critico</strong> - finestra di pochi secondi',
+                            '<strong>Falsi start frequenti</strong> - molti setup falliscono',
+                            '<strong>Dipendenza da catalyst</strong> - senza news non funziona',
+                            '<strong>Stress psicologico</strong> alto per il trader'
+                        ]
+                    },
+                    'coverage': {
+                        title: '🛡️ OPERAZIONI CHE COPRONO I PUNTI DEBOLI:',
+                        items: [
+                            '<strong>Rimbalzo</strong> → se SL viene toccato su livello tecnico',
+                            '<strong>Flash (opposto)</strong> → se Impulso fallisce',
+                            '<strong>False Breakout</strong> → se era una falsa rottura',
+                            '<strong>Pullback</strong> → se il timing era prematuro',
+                            '<strong>Consolidamento</strong> → se il mercato stagna post-fallimento'
+                        ]
+                    }
+                }
+            },
+            'gap': {
+                title: '📈 GAP OPENING [P=0.6, x1.0, TP=8, SL=5]',
+                sections: {
+                    'ideal': { title: '📈 QUANDO È IDEALE USARLA:', items: ['Aperture Sydney/Tokyo dopo weekend', 'Gap significativi (20-80 pip)', 'Notizie overnight'] },
+                    'strengths': { title: '💪 PUNTI FORTI:', items: ['<strong>Prevedibilità temporale</strong>', '<strong>Momentum psicologico</strong>'] },
+                    'combinations': { title: '🔧 COMBINAZIONI NATURALI:', items: ['<strong>Impulso</strong> → movimenti freschi', '<strong>Breakout</strong> → rotture overnight'] },
+                    'avoid': { title: '⚠️ QUANDO È SCONSIGLIATO:', items: ['Gap troppo piccoli o grandi', 'Bassa liquidità prime ore'] },
+                    'weaknesses': { title: '❌ PUNTI DEBOLI:', items: ['<strong>Attrazione magnetica</strong> chiusura gap', '<strong>Ratio modesto</strong> (1.6:1)'] },
+                    'coverage': { title: '🛡️ OPERAZIONI CHE COPRONO I PUNTI DEBOLI:', items: ['<strong>False Breakout</strong> → se gap chiude', '<strong>Pullback</strong> → richiusura parziale'] }
+                }
+            },
+            'distribuzione': {
+                title: '📊 DISTRIBUZIONE [P=0.5, x0.8, TP=9, SL=7]',
+                sections: {
+                    'ideal': { title: '📈 QUANDO È IDEALE USARLA:', items: ['Trend stabiliti H4/Daily', 'Partecipazione istituzionale'] },
+                    'strengths': { title: '💪 PUNTI FORTI:', items: ['<strong>Sostenibilità</strong>', '<strong>Resilienza</strong>'] },
+                    'combinations': { title: '🔧 COMBINAZIONI NATURALI:', items: ['<strong>Swing Accumulo</strong>', '<strong>Value Averaging</strong>'] },
+                    'avoid': { title: '⚠️ QUANDO È SCONSIGLIATO:', items: ['Alta volatilità intraday', 'Trend maturi'] },
+                    'weaknesses': { title: '❌ PUNTI DEBOLI:', items: ['<strong>Sviluppo lento</strong>', '<strong>Ratio basso</strong>'] },
+                    'coverage': { title: '🛡️ OPERAZIONI CHE COPRONO I PUNTI DEBOLI:', items: ['<strong>Flash</strong> → accelerazione', '<strong>Climax</strong> → fine movimento'] }
+                }
+            },
+            'momentum': {
+                title: '⚡ MOMENTUM [P=0.6, x1.2, TP=11, SL=6]',
+                sections: {
+                    'ideal': { title: '📈 QUANDO È IDEALE USARLA:', items: ['Trend in accelerazione', 'Breakout confermati'] },
+                    'strengths': { title: '💪 PUNTI FORTI:', items: ['<strong>Trend confermato</strong>', '<strong>Ratio buono</strong> (1.8:1)'] },
+                    'combinations': { title: '🔧 COMBINAZIONI NATURALI:', items: ['<strong>Impulso</strong>', '<strong>Breakout</strong>'] },
+                    'avoid': { title: '⚠️ QUANDO È SCONSIGLIATO:', items: ['Trend overextended', 'Divergenze evidenti'] },
+                    'weaknesses': { title: '❌ PUNTI DEBOLI:', items: ['<strong>Entrata cara</strong>', '<strong>Esaurimento improvviso</strong>'] },
+                    'coverage': { title: '🛡️ OPERAZIONI CHE COPRONO I PUNTI DEBOLI:', items: ['<strong>Climax</strong>', '<strong>Pullback</strong>'] }
+                }
+            },
+            'flash': {
+                title: '💨 FLASH [P=0.7, x0.8, TP=7, SL=3]',
+                sections: {
+                    'ideal': { title: '📈 QUANDO È IDEALE USARLA:', items: ['News immediate', 'Spike volatilità'] },
+                    'strengths': { title: '💪 PUNTI FORTI:', items: ['<strong>Rapidità estrema</strong>', '<strong>Ratio buono</strong> (2.3:1)'] },
+                    'combinations': { title: '🔧 COMBINAZIONI NATURALI:', items: ['<strong>Impulso</strong>', '<strong>Gap Opening</strong>'] },
+                    'avoid': { title: '⚠️ QUANDO È SCONSIGLIATO:', items: ['Mercati calmi', 'Bassa liquidità'] },
+                    'weaknesses': { title: '❌ PUNTI DEBOLI:', items: ['<strong>Timing critico</strong>', '<strong>Reversibilità alta</strong>'] },
+                    'coverage': { title: '🛡️ OPERAZIONI CHE COPRONO I PUNTI DEBOLI:', items: ['<strong>Pullback</strong>', '<strong>Rimbalzo</strong>'] }
+                }
+            },
+            'pullback': {
+                title: '🔄 PULLBACK [P=0.6, x1.0, TP=9, SL=5]',
+                sections: {
+                    'ideal': { title: '📈 QUANDO È IDEALE USARLA:', items: ['Trend definiti', 'Fibonacci 38.2-61.8%'] },
+                    'strengths': { title: '💪 PUNTI FORTI:', items: ['<strong>Entrata a sconto</strong>', '<strong>Trend intatto</strong>'] },
+                    'combinations': { title: '🔧 COMBINAZIONI NATURALI:', items: ['<strong>Swing Accumulo</strong>', '<strong>Momentum</strong>'] },
+                    'avoid': { title: '⚠️ QUANDO È SCONSIGLIATO:', items: ['Trend esauriti', 'Pullback >61.8%'] },
+                    'weaknesses': { title: '❌ PUNTI DEBOLI:', items: ['<strong>Rischio inversione</strong>', '<strong>Timing difficile</strong>'] },
+                    'coverage': { title: '🛡️ OPERAZIONI CHE COPRONO I PUNTI DEBOLI:', items: ['<strong>Breakout</strong>', '<strong>False Breakout</strong>'] }
+                }
+            },
+            'breakout': {
+                title: '🔓 BREAKOUT [P=0.5, x1.3, TP=6, SL=3]',
+                sections: {
+                    'ideal': { title: '📈 QUANDO È IDEALE USARLA:', items: ['Livelli testati multiple volte', 'Volume crescente'] },
+                    'strengths': { title: '💪 PUNTI FORTI:', items: ['<strong>Livelli chiari</strong>', '<strong>Segnale visivo</strong>'] },
+                    'combinations': { title: '🔧 COMBINAZIONI NATURALI:', items: ['<strong>Momentum</strong>', '<strong>Impulso</strong>'] },
+                    'avoid': { title: '⚠️ QUANDO È SCONSIGLIATO:', items: ['Livelli deboli', 'Bassa liquidità'] },
+                    'weaknesses': { title: '❌ PUNTI DEBOLI:', items: ['<strong>Falsi frequenti</strong>', '<strong>Target limitato</strong>'] },
+                    'coverage': { title: '🛡️ OPERAZIONI CHE COPRONO I PUNTI DEBOLI:', items: ['<strong>False Breakout</strong>', '<strong>Rimbalzo</strong>'] }
+                }
+            },
+            'false-breakout': {
+                title: '❌ FALSE BREAKOUT [P=0.7, x1.1, TP=5, SL=3]',
+                sections: {
+                    'ideal': { title: '📈 QUANDO È IDEALE USARLA:', items: ['Fine giornata', 'Penetrazione minima'] },
+                    'strengths': { title: '💪 PUNTI FORTI:', items: ['<strong>Alta probabilità</strong> (0.7)', '<strong>Movimento violento</strong>'] },
+                    'combinations': { title: '🔧 COMBINAZIONI NATURALI:', items: ['<strong>Rimbalzo</strong>', '<strong>Pullback</strong>'] },
+                    'avoid': { title: '⚠️ QUANDO È SCONSIGLIATO:', items: ['Alta liquidità', 'News forti'] },
+                    'weaknesses': { title: '❌ PUNTI DEBOLI:', items: ['<strong>Riconoscimento difficile</strong>', '<strong>Target modesto</strong>'] },
+                    'coverage': { title: '🛡️ OPERAZIONI CHE COPRONO I PUNTI DEBOLI:', items: ['<strong>Breakout</strong>', '<strong>Momentum</strong>'] }
+                }
+            },
+            'rimbalzo': {
+                title: '🔵 RIMBALZO [P=0.6, x1.0, TP=8, SL=6]',
+                sections: {
+                    'ideal': { title: '📈 QUANDO È IDEALE USARLA:', items: ['Supporti storici', 'Round numbers'] },
+                    'strengths': { title: '💪 PUNTI FORTI:', items: ['<strong>Livelli chiari</strong>', '<strong>Movimento pulito</strong>'] },
+                    'combinations': { title: '🔧 COMBINAZIONI NATURALI:', items: ['<strong>Pullback</strong>', '<strong>False Breakout</strong>'] },
+                    'avoid': { title: '⚠️ QUANDO È SCONSIGLIATO:', items: ['Trend forti', 'Livelli rotti'] },
+                    'weaknesses': { title: '❌ PUNTI DEBOLI:', items: ['<strong>Rischio rottura</strong>', '<strong>Target limitato</strong>'] },
+                    'coverage': { title: '🛡️ OPERAZIONI CHE COPRONO I PUNTI DEBOLI:', items: ['<strong>Breakout</strong>', '<strong>Momentum</strong>'] }
+                }
+            },
+            'swing-accumulo': {
+                title: '📈 SWING ACCUMULO [P=0.7, x1.2, TP=12, SL=7]',
+                sections: {
+                    'ideal': { title: '📈 QUANDO È IDEALE USARLA:', items: ['Trend H4/Daily', 'Higher lows'] },
+                    'strengths': { title: '💪 PUNTI FORTI:', items: ['<strong>Target elevato</strong>', '<strong>Entrate multiple</strong>'] },
+                    'combinations': { title: '🔧 COMBINAZIONI NATURALI:', items: ['<strong>Pullback</strong>', '<strong>Value Averaging</strong>'] },
+                    'avoid': { title: '⚠️ QUANDO È SCONSIGLIATO:', items: ['Trend esauriti', 'Volatilità eccessiva'] },
+                    'weaknesses': { title: '❌ PUNTI DEBOLI:', items: ['<strong>Capitale immobilizzato</strong>', '<strong>Gestione complessa</strong>'] },
+                    'coverage': { title: '🛡️ OPERAZIONI CHE COPRONO I PUNTI DEBOLI:', items: ['<strong>Climax</strong>', '<strong>Divergenza</strong>'] }
+                }
+            },
+            'value-averaging': {
+                title: '💎 VALUE AVERAGING [P=0.6, x1.0, TP=18, SL=10]',
+                sections: {
+                    'ideal': { title: '📈 QUANDO È IDEALE USARLA:', items: ['Asset sottovalutati', 'Analisi fondamentale'] },
+                    'strengths': { title: '💪 PUNTI FORTI:', items: ['<strong>Target massimo</strong>', '<strong>Base fondamentale</strong>'] },
+                    'combinations': { title: '🔧 COMBINAZIONI NATURALI:', items: ['<strong>DCA</strong>', '<strong>Swing Accumulo</strong>'] },
+                    'avoid': { title: '⚠️ QUANDO È SCONSIGLIATO:', items: ['Mercati speculativi', 'Value trap'] },
+                    'weaknesses': { title: '❌ PUNTI DEBOLI:', items: ['<strong>Durata estrema</strong>', '<strong>Timing imperfetto</strong>'] },
+                    'coverage': { title: '🛡️ OPERAZIONI CHE COPRONO I PUNTI DEBOLI:', items: ['<strong>DCA</strong>', '<strong>Climax</strong>'] }
+                }
+            },
+            'dca': {
+                title: '🎯 DCA [P=0.8, x0.9, TP=24, SL=12]',
+                sections: {
+                    'ideal': { title: '📈 QUANDO È IDEALE USARLA:', items: ['Lunghissimo termine', 'Trend secolare'] },
+                    'strengths': { title: '💪 PUNTI FORTI:', items: ['<strong>Target assoluto</strong>', '<strong>Stress zero</strong>'] },
+                    'combinations': { title: '🔧 COMBINAZIONI NATURALI:', items: ['<strong>Value Averaging</strong>', '<strong>Consolidamento</strong>'] },
+                    'avoid': { title: '⚠️ QUANDO È SCONSIGLIATO:', items: ['Timeframe corti', 'Asset in declino'] },
+                    'weaknesses': { title: '❌ PUNTI DEBOLI:', items: ['<strong>Durata estrema</strong>', '<strong>No exit strategy</strong>'] },
+                    'coverage': { title: '🛡️ OPERAZIONI CHE COPRONO I PUNTI DEBOLI:', items: ['<strong>Climax</strong>', '<strong>Divergenza</strong>'] }
+                }
+            },
+            'climax': {
+                title: '💥 CLIMAX [P=0.3, x1.3, TP=4, SL=3]',
+                sections: {
+                    'ideal': { title: '📈 QUANDO È IDEALE USARLA:', items: ['Trend maturi', 'Volumi estremi'] },
+                    'strengths': { title: '💪 PUNTI FORTI:', items: ['<strong>Segnali evidenti</strong>', '<strong>Fine trend chiara</strong>'] },
+                    'combinations': { title: '🔧 COMBINAZIONI NATURALI:', items: ['<strong>Divergenza</strong>', '<strong>Flash opposto</strong>'] },
+                    'avoid': { title: '⚠️ QUANDO È SCONSIGLIATO:', items: ['Trend giovani', 'Volumi normali'] },
+                    'weaknesses': { title: '❌ PUNTI DEBOLI:', items: ['<strong>Timing critico</strong>', '<strong>Bassa probabilità</strong>'] },
+                    'coverage': { title: '🛡️ OPERAZIONI CHE COPRONO I PUNTI DEBOLI:', items: ['<strong>Divergenza</strong>', '<strong>Momentum</strong>'] }
+                }
+            },
+            'divergenza': {
+                title: '📉 DIVERGENZA [P=0.4, x1.0, TP=7, SL=4]',
+                sections: {
+                    'ideal': { title: '📈 QUANDO È IDEALE USARLA:', items: ['Trend maturi', 'RSI/MACD divergenti'] },
+                    'strengths': { title: '💪 PUNTI FORTI:', items: ['<strong>Segnale anticipatore</strong>', '<strong>Leading indicator</strong>'] },
+                    'combinations': { title: '🔧 COMBINAZIONI NATURALI:', items: ['<strong>Climax</strong>', '<strong>False Breakout</strong>'] },
+                    'avoid': { title: '⚠️ QUANDO È SCONSIGLIATO:', items: ['Trend forti', 'Zone neutre'] },
+                    'weaknesses': { title: '❌ PUNTI DEBOLI:', items: ['<strong>Falsi segnali</strong>', '<strong>Timing impreciso</strong>'] },
+                    'coverage': { title: '🛡️ OPERAZIONI CHE COPRONO I PUNTI DEBOLI:', items: ['<strong>Momentum</strong>', '<strong>Flash</strong>'] }
+                }
+            },
+            'consolidamento': {
+                title: '📊 CONSOLIDAMENTO [P=0.8, x0.8, TP=5, SL=5]',
+                sections: {
+                    'ideal': { title: '📈 QUANDO È IDEALE USARLA:', items: ['Range definiti', 'Bassa volatilità'] },
+                    'strengths': { title: '💪 PUNTI FORTI:', items: ['<strong>Range definito</strong>', '<strong>Stress basso</strong>'] },
+                    'combinations': { title: '🔧 COMBINAZIONI NATURALI:', items: ['<strong>DCA</strong>', '<strong>Rimbalzo</strong>'] },
+                    'avoid': { title: '⚠️ QUANDO È SCONSIGLIATO:', items: ['Trend forti', 'News in arrivo'] },
+                    'weaknesses': { title: '❌ PUNTI DEBOLI:', items: ['<strong>Profitti minimi</strong>', '<strong>Breakout improvvisi</strong>'] },
+                    'coverage': { title: '🛡️ OPERAZIONI CHE COPRONO I PUNTI DEBOLI:', items: ['<strong>Breakout</strong>', '<strong>False Breakout</strong>'] }
+                }
+            }
+        };
+
+        let currentPopup = null;
+
+        function createAnalysisPopup(analysisKey, targetElement) {
+            const analysis = analysisData[analysisKey];
+            if (!analysis) return null;
+
+            const popup = document.createElement('div');
+            popup.className = 'analysis-popup';
+            popup.innerHTML = `
+                <button class="popup-close-btn">×</button>
+                <h3>${analysis.title}</h3>
+                ${Object.values(analysis.sections).map(section => `
+                    <div class="analysis-section">
+                        <h4 class="section-toggle collapsed">${section.title}</h4>
+                        <ul class="section-content">
+                            ${section.items.map(item => `<li>${item}</li>`).join('')}
+                        </ul>
+                    </div>
+                `).join('')}
+            `;
+
+            positionPopup(popup, targetElement);
+            
+            const closeBtn = popup.querySelector('.popup-close-btn');
+            closeBtn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                closeAnalysisPopup(targetElement);
+            });
+
+            const sectionToggles = popup.querySelectorAll('.section-toggle');
+            sectionToggles.forEach(toggle => {
+                toggle.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    toggleSection(toggle);
+                });
+            });
+
+            return popup;
+        }
+
+        function toggleSection(toggleElement) {
+            const content = toggleElement.nextElementSibling;
+            const isCollapsed = toggleElement.classList.contains('collapsed');
+            
+            if (isCollapsed) {
+                toggleElement.classList.remove('collapsed');
+                content.classList.add('expanded');
+            } else {
+                toggleElement.classList.add('collapsed');
+                content.classList.remove('expanded');
+            }
+        }
+
+        function positionPopup(popup, targetElement) {
+            document.body.appendChild(popup);
+            
+            const rect = targetElement.getBoundingClientRect();
+            const viewportWidth = window.innerWidth;
+            const viewportHeight = window.innerHeight;
+            
+            popup.style.visibility = 'hidden';
+            popup.style.display = 'block';
+            const popupRect = popup.getBoundingClientRect();
+            popup.style.visibility = 'visible';
+            
+            let left, top;
+            
+            if (rect.right + popupRect.width + 20 <= viewportWidth) {
+                left = rect.right + 15;
+            } else {
+                left = rect.left - popupRect.width - 15;
+            }
+            
+            const idealTop = rect.top;
+            const maxTop = viewportHeight - popupRect.height - 20;
+            const minTop = 20;
+            
+            top = Math.max(minTop, Math.min(idealTop, maxTop));
+            
+            popup.style.left = `${left}px`;
+            popup.style.top = `${top}px`;
+        }
+
+        function showAnalysisPopup(analysisKey, targetElement) {
+            const popup = createAnalysisPopup(analysisKey, targetElement);
+            if (!popup) return;
+
+            currentPopup = { popup, targetElement };
+            targetElement.classList.add('active-analysis');
+            
+            setTimeout(() => {
+                document.addEventListener('click', handleOutsideClick);
+            }, 100);
+        }
+
+        function closeAnalysisPopup(targetElement) {
+            if (!currentPopup) return;
+
+            const { popup } = currentPopup;
+            popup.classList.add('closing');
+            targetElement.classList.remove('active-analysis');
+            
+            setTimeout(() => {
+                if (popup && popup.parentNode) {
+                    popup.parentNode.removeChild(popup);
+                }
+                currentPopup = null;
+                document.removeEventListener('click', handleOutsideClick);
+            }, 200);
+        }
+
+        function handleOutsideClick(event) {
+            if (!currentPopup) return;
+            
+            const { popup, targetElement } = currentPopup;
+            
+            if (!popup.contains(event.target) && !targetElement.contains(event.target)) {
+                closeAnalysisPopup(targetElement);
+            }
+        }
+
+        function toggleAnalysisPopup(analysisKey, targetElement) {
+            if (currentPopup && currentPopup.targetElement === targetElement) {
+                closeAnalysisPopup(targetElement);
+                return;
+            }
+            
+            if (currentPopup) {
+                closeAnalysisPopup(currentPopup.targetElement);
+            }
+            
+            showAnalysisPopup(analysisKey, targetElement);
+        }
+
+        function applyColorCoding() {
+            document.querySelectorAll('td.score').forEach(cell => {
+                const score = parseInt(cell.textContent);
+                cell.classList.remove('score-very-high', 'score-high', 'score-medium', 'score-low', 'score-very-low');
+                
+                if (score >= 20) cell.classList.add('score-very-high');
+                else if (score >= 15) cell.classList.add('score-high');
+                else if (score >= 10) cell.classList.add('score-medium');
+                else if (score >= 5) cell.classList.add('score-low');
+                else cell.classList.add('score-very-low');
+            });
+        }
+
+        function toggleSubclasses(typeName) {
+            const subclassRows = document.querySelectorAll(`tr[data-parent="${typeName}"]`);
+            const headerRow = document.querySelector(`td[data-type="${typeName}"]`);
+            
+            subclassRows.forEach(row => {
+                row.classList.toggle('visible');
+            });
+            
+            headerRow.classList.toggle('expanded');
+        }
+
+        function getSubclassKey(row) {
+            const parentType = row.getAttribute('data-parent');
+            const headerText = row.querySelector('.subclass-header').textContent.trim();
+            
+            const subclassMap = {
+                'inizio': {
+                    '→ Impulso': 'inizio-impulso',
+                    '→ Gap Opening': 'inizio-gap',
+                    '→ Distribuzione': 'inizio-distribuzione'
+                },
+                'continuazione': {
+                    '→ Momentum': 'continuazione-momentum',
+                    '→ Flash': 'continuazione-flash',
+                    '→ Pullback': 'continuazione-pullback'
+                },
+                'pivot': {
+                    '→ Breakout': 'pivot-breakout',
+                    '→ False Breakout': 'pivot-false',
+                    '→ Rimbalzo': 'pivot-rimbalzo'
+                },
+                'accumulo': {
+                    '→ Swing Accumulo': 'accumulo-swing',
+                    '→ Value Averaging': 'accumulo-value',
+                    '→ DCA': 'accumulo-dca'
+                },
+                'esaurimento': {
+                    '→ Climax': 'esaurimento-climax',
+                    '→ Divergenza': 'esaurimento-divergenza',
+                    '→ Consolidamento': 'esaurimento-consolidamento'
+                }
+            };
+            
+            return subclassMap[parentType] ? subclassMap[parentType][headerText] : null;
+        }
+
+        function addHoverDetails() {
+            document.querySelectorAll('.subclass-row .score').forEach(cell => {
+                if (cell.querySelector('.score-details')) return;
+                
+                const row = cell.closest('tr');
+                const subclassKey = getSubclassKey(row);
+                
+                if (subclassKey && subclassParams[subclassKey]) {
+                    const params = subclassParams[subclassKey];
+                    const rr = (params.tp / params.sl).toFixed(2);
+                    
+                    cell.classList.add('subclass-cell');
+                    
+                    const detailDiv = document.createElement('div');
+                    detailDiv.className = 'score-details';
+                    detailDiv.innerHTML = `
+                        <div class="param-line"><span class="param-tp">TP: ${params.tp}</span></div>
+                        <div class="param-line"><span class="param-sl">SL: ${params.sl}</span></div>
+                        <div class="param-line"><span class="param-rr">R:R: ${rr}</span></div>
+                    `;
+                    
+                    cell.appendChild(detailDiv);
+                }
+            });
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            applyColorCoding();
+            addHoverDetails();
+            
+            document.querySelectorAll('.row-header[data-type]').forEach(header => {
+                header.addEventListener('click', function() {
+                    const typeName = this.getAttribute('data-type');
+                    toggleSubclasses(typeName);
+                    setTimeout(addHoverDetails, 50);
+                });
+            });
+
+            document.querySelectorAll('.clickable-analysis').forEach(element => {
+                element.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    const analysisKey = this.getAttribute('data-analysis');
+                    toggleAnalysisPopup(analysisKey, this);
+                });
+                
+                element.style.cursor = 'pointer';
+                element.title = 'Clicca per analisi completa';
+            });
+        });
+    </script>
+</body>
+</html>
