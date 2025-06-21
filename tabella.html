@@ -351,35 +351,8 @@
     <div class="container">
         <h1>🎯 Matrice Punteggi Trading</h1>
         
-        <div class="legend">
-            <div class="legend-section">
-                <h3>📊 Parametri Contestuali (Sessioni)</h3>
-                <ul>
-                    <li><strong>SYDNEY:</strong> 2 punti - Volumi bassi</li>
-                    <li><strong>SYD-TO:</strong> 8 punti - Overlap Oceania-Asia</li>
-                    <li><strong>TOKYO:</strong> 12 punti - Hub asiatico</li>
-                    <li><strong>TO-LO:</strong> 18 punti - Overlap Asia-Europa</li>
-                    <li><strong>LONDON:</strong> 15 punti - Apertura europea</li>
-                    <li><strong>LO-NY:</strong> 25 punti - Massima liquidità</li>
-                    <li><strong>NEWYORK:</strong> 22 punti - Sessione USA</li>
-                    <li><strong>NY-SY:</strong> 5 punti - Overlap limitato</li>
-                </ul>
-            </div>
-            
-            <div class="legend-section">
-                <h3>⚡ Tipologie Operazioni</h3>
-                <ul>
-                    <li><strong>INIZIO:</strong> x1.0 - Alto margine</li>
-                    <li><strong>CONTINUAZIONE:</strong> x0.8 - Buon margine</li>
-                    <li><strong>PIVOT:</strong> x0.6 - Rischio/rendimento variabile</li>
-                    <li><strong>ACCUMULO:</strong> x0.4 - Lungo termine</li>
-                    <li><strong>ESAURIMENTO:</strong> x0.3 - Margini ridotti</li>
-                </ul>
-            </div>
-        </div>
-        
         <div class="formula">
-            <strong>Formula:</strong> Punteggio = (Valore Sessione × Moltiplicatore Tipologia) | Minimo: 1 punto
+            <strong>Formula:</strong> Punteggio = (Valore Sessione × Moltiplicatore Tipologia) 
         </div>
         
         <table id="tradingMatrix">
@@ -644,65 +617,12 @@
             'impulso': {
                 title: '🚀 IMPULSO [P=0.4, x1.2, TP=10, SL=2]',
                 sections: {
-                    'ideal': {
-                        title: '📈 QUANDO È IDEALE USARLA:',
-                        items: [
-                            'News release importanti (NFP, Fed, ECB)',
-                            'Aperture sessioni con gap significativi',
-                            'Breakout da consolidamenti lunghi',
-                            'Catalyst events chiari e definiti',
-                            'Mercati ad alta liquidità (overlap NY-London)',
-                            'Timeframe M1-M5 per execution rapida'
-                        ]
-                    },
-                    'strengths': {
-                        title: '💪 PUNTI FORTI:',
-                        items: [
-                            '<strong>Ratio eccezionale</strong> (5:1) - massima efficienza capitale',
-                            '<strong>Velocità estrema</strong> - profitti in pochi minuti',
-                            '<strong>Movimento pulito</strong> - senza "rumore" di mercato',
-                            '<strong>Catalizzatore chiaro</strong> - facile identificazione setup'
-                        ]
-                    },
-                    'combinations': {
-                        title: '🔧 COMBINAZIONI NATURALI:',
-                        items: [
-                            '<strong>Momentum</strong> → entrambi puntano su accelerazione',
-                            '<strong>Breakout</strong> → entrambi sfruttano rotture di livelli',
-                            '<strong>Gap Opening</strong> → entrambi operano su movimenti "freschi"',
-                            '<strong>Flash</strong> → entrambi sono operazioni ad alta velocità'
-                        ]
-                    },
-                    'avoid': {
-                        title: '⚠️ QUANDO È SCONSIGLIATO:',
-                        items: [
-                            'Mercati laterali senza catalyst',
-                            'Bassa volatilità (agosto, fine anno)',
-                            'Livelli di resistenza forti nelle vicinanze',
-                            'Orari di bassa liquidità (gap tra sessioni)',
-                            'Dopo grandi movimenti già avvenuti'
-                        ]
-                    },
-                    'weaknesses': {
-                        title: '❌ PUNTI DEBOLI:',
-                        items: [
-                            '<strong>Stop loss serratissimo</strong> (SL=2) - facile triggerare',
-                            '<strong>Timing critico</strong> - finestra di pochi secondi',
-                            '<strong>Falsi start frequenti</strong> - molti setup falliscono',
-                            '<strong>Dipendenza da catalyst</strong> - senza news non funziona',
-                            '<strong>Stress psicologico</strong> alto per il trader'
-                        ]
-                    },
-                    'coverage': {
-                        title: '🛡️ OPERAZIONI CHE COPRONO I PUNTI DEBOLI:',
-                        items: [
-                            '<strong>Rimbalzo</strong> → se SL viene toccato su livello tecnico',
-                            '<strong>Flash (opposto)</strong> → se Impulso fallisce',
-                            '<strong>False Breakout</strong> → se era una falsa rottura',
-                            '<strong>Pullback</strong> → se il timing era prematuro',
-                            '<strong>Consolidamento</strong> → se il mercato stagna post-fallimento'
-                        ]
-                    }
+                    'ideal': { title: '📈 QUANDO È IDEALE USARLA:', items: ['Aperture Sydney/Tokyo', 'Movimenti forti', 'Notizie importanti'] },
+                    'strengths': { title: '💪 PUNTI FORTI:', items: ['<strong>Velocità</strong>', '<strong>Rendimento elevato</strong>'] },
+                    'combinations': { title: '🔧 COMBINAZIONI NATURALI:', items: ['<strong>Gap Opening</strong>', '<strong>Breakout</strong>'] },
+                    'avoid': { title: '⚠️ QUANDO È SCONSIGLIATO:', items: ['Mercati laterali', 'Bassa volatilità'] },
+                    'weaknesses': { title: '❌ PUNTI DEBOLI:', items: ['<strong>Rischio alto</strong>', '<strong>Stop loss frequenti</strong>'] },
+                    'coverage': { title: '🛡️ OPERAZIONI CHE COPRONO I PUNTI DEBOLI:', items: ['<strong>False Breakout</strong>', '<strong>Pullback</strong>'] }
                 }
             },
             'gap': {
@@ -862,6 +782,22 @@
         };
 
         let currentPopup = null;
+        let isClosingPopup = false;
+
+        function closeAllAnalysisPopups() {
+            // Rimuovi tutti i popup e la classe active-analysis da tutte le celle
+            document.querySelectorAll('.analysis-popup').forEach(popup => {
+                popup.classList.add('closing');
+                setTimeout(() => {
+                    if (popup.parentNode) popup.parentNode.removeChild(popup);
+                }, 200);
+            });
+            document.querySelectorAll('.active-analysis').forEach(cell => {
+                cell.classList.remove('active-analysis');
+            });
+            currentPopup = null;
+            document.removeEventListener('click', handleOutsideClick);
+        }
 
         function createAnalysisPopup(analysisKey, targetElement) {
             const analysis = analysisData[analysisKey];
@@ -887,7 +823,7 @@
             const closeBtn = popup.querySelector('.popup-close-btn');
             closeBtn.addEventListener('click', (e) => {
                 e.stopPropagation();
-                closeAnalysisPopup(targetElement);
+                closeAnalysisPopup(targetElement, true);
             });
 
             const sectionToggles = popup.querySelectorAll('.section-toggle');
@@ -945,6 +881,7 @@
         }
 
         function showAnalysisPopup(analysisKey, targetElement) {
+            closeAllAnalysisPopups(); // Chiudi sempre tutto prima di aprire
             const popup = createAnalysisPopup(analysisKey, targetElement);
             if (!popup) return;
 
@@ -956,42 +893,49 @@
             }, 100);
         }
 
-        function closeAnalysisPopup(targetElement) {
-            if (!currentPopup) return;
-
+        function closeAnalysisPopup(targetElement, forceImmediate = false) {
+            if (!currentPopup || isClosingPopup) return;
+            isClosingPopup = true;
             const { popup } = currentPopup;
             popup.classList.add('closing');
             targetElement.classList.remove('active-analysis');
-            
-            setTimeout(() => {
+
+            const removePopup = () => {
                 if (popup && popup.parentNode) {
                     popup.parentNode.removeChild(popup);
                 }
                 currentPopup = null;
+                isClosingPopup = false;
                 document.removeEventListener('click', handleOutsideClick);
-            }, 200);
+            };
+
+            if (forceImmediate) {
+                removePopup();
+            } else {
+                setTimeout(removePopup, 200);
+            }
         }
 
         function handleOutsideClick(event) {
             if (!currentPopup) return;
-            
             const { popup, targetElement } = currentPopup;
-            
             if (!popup.contains(event.target) && !targetElement.contains(event.target)) {
                 closeAnalysisPopup(targetElement);
             }
         }
 
         function toggleAnalysisPopup(analysisKey, targetElement) {
+            if (isClosingPopup) return; // Blocca se in chiusura
+            // Se il popup è già aperto sulla stessa cella, chiudi
             if (currentPopup && currentPopup.targetElement === targetElement) {
                 closeAnalysisPopup(targetElement);
                 return;
             }
-            
+            // Se c'è un popup aperto su un'altra cella, chiudi prima e poi apri il nuovo
             if (currentPopup) {
-                closeAnalysisPopup(currentPopup.targetElement);
+                const prevTarget = currentPopup.targetElement;
+                closeAnalysisPopup(prevTarget, true); // chiusura immediata
             }
-            
             showAnalysisPopup(analysisKey, targetElement);
         }
 
